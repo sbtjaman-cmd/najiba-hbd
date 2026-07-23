@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>For You 💫</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Pacifico&family=Quicksand:wght@400;500;600;700&family=Baloo+2:wght@600;700;800&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink-50:#fff6fa; --pink-100:#ffe6f1; --pink-150:#ffdcec; --pink-200:#ffc7e3;
+  --pink-300:#ffa9d4; --pink-400:#ff87c2; --pink-500:#ff66af; --pink-600:#f0479c; --pink-700:#d6318a;
+  --mint-200:#d3f8ec; --mint-300:#aef0dc; --mint-400:#7fe3c4; --mint-600:#2f9c7c;
+  --lav-200:#ede1ff; --lav-400:#cbaeff;
+  --peach-200:#ffe3cf; --butter-200:#fff2bf; --sky-200:#d7ecff; --blush-300:#ffcfe1;
+  --ink:#6b2f4c; --white:#ffffff;
+  --accent-1:#7fe3c4; --accent-2:#cbaeff;
+  --font-display:'Luckiest Guy', cursive, sans-serif;
+  --font-script:'Pacifico', cursive, sans-serif;
+  --font-body:'Quicksand', sans-serif;
+  --font-cartoon-display:'Baloo 2', cursive, sans-serif;
+  --font-cartoon-body:'Fredoka', sans-serif;
+}
+*,*::before,*::after{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body{ margin:0; padding:0; }
+body{
+  min-height:100vh; min-height:100dvh;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(160deg, #fff0f6, #ffd0e6, #f6d9ff, #ffe6f1);
+  background-size:300% 300%;
+  animation:startGradient 10s ease-in-out infinite;
+  font-family:var(--font-body); font-weight:500; color:var(--ink);
+  padding:18px; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+button{ font-family:inherit; touch-action:manipulation; }
+button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
+
+/* ===== START OVERLAY ===== */
+.start-overlay{
+  position:relative; width:100%; max-width:420px; aspect-ratio:5/7;
+  display:flex; align-items:center; justify-content:center; padding:8%;
+  text-align:center;
+  border-radius:32px;
+  overflow:hidden;
+  background:linear-gradient(160deg,#fff0f6,#ffd0e6,#f6d9ff,#ffe6f1); background-size:300% 300%;
+  animation:startGradient 10s ease-in-out infinite;
+  box-shadow:0 26px 60px -14px rgba(240,71,156,.45), 0 6px 18px rgba(240,71,156,.22);
+}
+.start-canvas{ position:absolute; inset:0; z-index:0; pointer-events:none; }
+
+/* fairy lights strung across the top of the card */
+.start-fairy-lights{ position:absolute; top:0; left:0; right:0; height:40px; z-index:2; pointer-events:none; overflow:visible; }
+.start-fairy-lights-svg{ width:100%; height:100%; display:block; overflow:visible; }
+.fairy-glow{ animation:fairyGlowPulse 2.6s ease-in-out infinite; transform-origin:center; }
+.fairy-body{ filter:drop-shadow(0 0 3px var(--bulb-color, #fff)); }
+@keyframes fairyGlowPulse{ 0%,100%{ opacity:.55; transform:scale(.82); } 50%{ opacity:1; transform:scale(1.2); } }
+
+/* small sunflower/blossom footer */
+.start-flowers{ position:absolute; left:0; right:0; bottom:0; height:9%; min-height:32px; max-height:52px; z-index:0; pointer-events:none; overflow:visible; }
+.start-flowers-svg{ width:100%; height:100%; display:block; }
+
+.start-content{ position:relative; z-index:1; }
+.start-emoji-row{ display:flex; align-items:center; justify-content:center; gap:10px; margin:0 0 6px; font-size:clamp(21px,5.8vw,27px); }
+.start-emoji-row span{ display:inline-block; animation:startBob 2.4s ease-in-out infinite; filter:drop-shadow(0 6px 10px rgba(240,71,156,.28)); }
+.start-emoji-row span:nth-child(2){ animation-delay:.25s; }
+.start-emoji-row span:nth-child(3){ animation-delay:.5s; }
+.start-title{
+  font-family:var(--font-cartoon-display); font-weight:700; font-size:clamp(17px,5.2vw,22px); color:var(--pink-600);
+  -webkit-text-stroke:2px #fff; paint-order:stroke fill; margin:0 0 10px; line-height:1.3;
+  animation:headlineGlow 2.8s ease-in-out infinite;
+}
+
+/* pretty standalone birthday-date badge */
+.start-date{ display:flex; justify-content:center; margin:0 0 12px; }
+.start-date-badge{
+  position:relative; display:flex; align-items:center; gap:9px;
+  padding:8px 18px; border-radius:18px;
+  background:linear-gradient(160deg,#fff,var(--pink-100) 130%);
+  border:2px solid var(--pink-300);
+  box-shadow:0 8px 18px rgba(240,71,156,.22), inset 0 0 0 3px #fff;
+  animation:floatBob 4s ease-in-out infinite;
+}
+.start-date-spark{ font-size:13px; color:var(--pink-400); animation:sprinkleTwinkle 2s ease-in-out infinite; }
+.start-date-spark.spark-b{ animation-delay:.65s; }
+.start-date-core{ display:flex; flex-direction:column; align-items:center; line-height:1; }
+.start-date-day{ font-family:var(--font-cartoon-display); font-weight:800; font-size:clamp(22px,6.4vw,28px); color:var(--pink-600); -webkit-text-stroke:1.6px #fff; paint-order:stroke fill; }
+.start-date-month{ margin-top:3px; font-family:var(--font-cartoon-body); font-weight:600; font-size:clamp(9.5px,2.6vw,11px); letter-spacing:.16em; text-transform:uppercase; color:var(--pink-700); }
+
+/* "do you really love me" mini-game gate */
+.start-gate{
+  max-width:262px; box-sizing:border-box; margin:0 auto;
+  display:flex; flex-direction:column; align-items:center; gap:7px;
+  padding:11px 13px 13px; background:rgba(255,255,255,.55); border:1px solid rgba(255,255,255,.75);
+  border-radius:20px; box-shadow:0 8px 20px rgba(240,71,156,.16);
+  transition:background .4s ease, border-color .4s ease;
+}
+.start-gate.shake{ animation:gateShake .5s ease; }
+.start-gate.celebrated{ background:linear-gradient(160deg, rgba(255,255,255,.7), rgba(255,241,191,.55)); border-color:var(--pink-400); }
+.start-gate-label{ margin:0; font-family:var(--font-cartoon-body); font-weight:600; font-size:clamp(9.5px,2.6vw,11px); letter-spacing:.06em; text-transform:uppercase; color:var(--pink-600); opacity:.85; }
+.start-gif-frame{
+  width:clamp(76px,22vw,96px); height:clamp(76px,22vw,96px); border-radius:16px; overflow:hidden;
+  background:var(--pink-100); box-shadow:0 6px 14px rgba(240,71,156,.2), inset 0 0 0 2px #fff;
+  display:flex; align-items:center; justify-content:center;
+}
+.start-gate-gif{ width:100%; height:100%; object-fit:cover; display:block; }
+.start-gif-fallback{ font-size:32px; }
+.start-question{
+  margin:1px 0 0; font-family:var(--font-cartoon-body); font-weight:500; font-size:clamp(13px,3.6vw,15px);
+  color:var(--pink-700); text-align:center; line-height:1.35; min-height:1.4em;
+}
+.start-gate-buttons{ display:flex; gap:11px; margin-top:1px; justify-content:center; }
+.start-yes-btn, .start-no-btn{
+  --nudge:1; transform:scale(var(--nudge)); border:none; padding:8px 17px; border-radius:999px;
+  font-family:var(--font-cartoon-body); font-weight:600; font-size:13px; cursor:pointer;
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1), background .2s ease, left .35s cubic-bezier(.34,1.56,.64,1), top .35s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 6px 14px rgba(0,0,0,.14);
+}
+.start-yes-btn{ background:var(--pink-500); color:#fff; }
+.start-yes-btn:active{ transform:scale(calc(var(--nudge) * .94)); }
+.start-yes-btn.celebrate{ animation:btnPulse 1s ease-in-out 2; }
+.start-no-btn{ background:#fff; color:var(--pink-600); border:1.5px solid var(--pink-300); }
+.start-no-btn:active{ transform:scale(calc(var(--nudge) * .9)); }
+.start-no-btn.dodge{ position:absolute; z-index:8; }
+
+/* Keyframes */
+@keyframes startGradient{ 0%,100%{ background-position:0% 30%; } 50%{ background-position:100% 70%; } }
+@keyframes startBob{ 0%,100%{ transform:translateY(0) rotate(-4deg); } 50%{ transform:translateY(-10px) rotate(4deg); } }
+@keyframes floatBob{ 0%,100%{ transform:translateY(0) rotate(-2deg); } 50%{ transform:translateY(-9px) rotate(2deg); } }
+@keyframes headlineGlow{ 0%,100%{ text-shadow:0 6px 14px rgba(240,71,156,.3); } 50%{ text-shadow:0 6px 22px rgba(240,71,156,.55), 0 0 26px rgba(255,193,223,.7); } }
+@keyframes gateShake{ 0%,100%{ transform:translateX(0); } 20%{ transform:translateX(-6px); } 40%{ transform:translateX(5px); } 60%{ transform:translateX(-4px); } 80%{ transform:translateX(3px); } }
+@keyframes btnPulse{ 0%,100%{ box-shadow:0 10px 22px rgba(240,71,156,.4); } 50%{ box-shadow:0 14px 30px rgba(240,71,156,.6), 0 0 0 7px rgba(255,255,255,.35); } }
+@keyframes sprinkleTwinkle{ 0%,100%{ opacity:.55; } 50%{ opacity:1; } }
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="start-overlay" id="startOverlay">
+  <canvas class="start-canvas" id="startCanvas"></canvas>
+
+  <!-- fairy lights -->
+  <div class="start-fairy-lights" aria-hidden="true">
+    <svg viewBox="0 0 400 38" preserveAspectRatio="xMidYMin meet" class="start-fairy-lights-svg">
+      <defs>
+        <radialGradient id="fairyGlowGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff8e0" stop-opacity=".95"></stop>
+          <stop offset="100%" stop-color="#fff8e0" stop-opacity="0"></stop>
+        </radialGradient>
+      </defs>
+      <path d="M0,4 Q40,20 80,4 Q120,20 160,4 Q200,20 240,4 Q280,20 320,4 Q360,20 400,4" fill="none" stroke="rgba(107,47,76,.42)" stroke-width="1.4" stroke-linecap="round"></path>
+      <g transform="translate(40,12)">
+        <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(107,47,76,.42)" stroke-width="1.1"></line>
+        <g transform="translate(0,16)" style="--bulb-color:var(--pink-400)">
+          <circle r="9" fill="url(#fairyGlowGrad)" class="fairy-glow" style="animation-delay:0s"></circle>
+          <ellipse cx="0" cy="0" rx="4" ry="5.2" class="fairy-body" style="fill:var(--bulb-color)"></ellipse>
+          <ellipse cx="-1.2" cy="-1.6" rx="1.3" ry="1.7" fill="#fff" opacity=".7"></ellipse>
+        </g>
+      </g>
+      <g transform="translate(120,12)">
+        <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(107,47,76,.42)" stroke-width="1.1"></line>
+        <g transform="translate(0,16)" style="--bulb-color:var(--butter-200)">
+          <circle r="9" fill="url(#fairyGlowGrad)" class="fairy-glow" style="animation-delay:.45s"></circle>
+          <ellipse cx="0" cy="0" rx="4" ry="5.2" class="fairy-body" style="fill:var(--bulb-color)"></ellipse>
+          <ellipse cx="-1.2" cy="-1.6" rx="1.3" ry="1.7" fill="#fff" opacity=".7"></ellipse>
+        </g>
+      </g>
+      <g transform="translate(200,12)">
+        <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(107,47,76,.42)" stroke-width="1.1"></line>
+        <g transform="translate(0,16)" style="--bulb-color:var(--mint-300)">
+          <circle r="9" fill="url(#fairyGlowGrad)" class="fairy-glow" style="animation-delay:.9s"></circle>
+          <ellipse cx="0" cy="0" rx="4" ry="5.2" class="fairy-body" style="fill:var(--bulb-color)"></ellipse>
+          <ellipse cx="-1.2" cy="-1.6" rx="1.3" ry="1.7" fill="#fff" opacity=".7"></ellipse>
+        </g>
+      </g>
+      <g transform="translate(280,12)">
+        <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(107,47,76,.42)" stroke-width="1.1"></line>
+        <g transform="translate(0,16)" style="--bulb-color:var(--lav-400)">
+          <circle r="9" fill="url(#fairyGlowGrad)" class="fairy-glow" style="animation-delay:1.35s"></circle>
+          <ellipse cx="0" cy="0" rx="4" ry="5.2" class="fairy-body" style="fill:var(--bulb-color)"></ellipse>
+          <ellipse cx="-1.2" cy="-1.6" rx="1.3" ry="1.7" fill="#fff" opacity=".7"></ellipse>
+        </g>
+      </g>
+      <g transform="translate(360,12)">
+        <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(107,47,76,.42)" stroke-width="1.1"></line>
+        <g transform="translate(0,16)" style="--bulb-color:var(--peach-200)">
+          <circle r="9" fill="url(#fairyGlowGrad)" class="fairy-glow" style="animation-delay:1.8s"></circle>
+          <ellipse cx="0" cy="0" rx="4" ry="5.2" class="fairy-body" style="fill:var(--bulb-color)"></ellipse>
+          <ellipse cx="-1.2" cy="-1.6" rx="1.3" ry="1.7" fill="#fff" opacity=".7"></ellipse>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <!-- flowers -->
+  <div class="start-flowers" aria-hidden="true">
+    <svg viewBox="0 0 400 92" preserveAspectRatio="xMidYMax slice" class="start-flowers-svg">
+      <ellipse cx="200" cy="98" rx="230" ry="26" style="fill:var(--pink-200)" opacity=".4"></ellipse>
+      <g transform="translate(200,92) scale(0.56) translate(-200,-92)">
+      <path d="M60 92 C58 74 66 60 76 50" stroke="#5a9c6c" stroke-width="3" fill="none" stroke-linecap="round"></path>
+      <ellipse cx="66" cy="66" rx="10" ry="5" fill="#6cb17e" transform="rotate(-35 66 66)"></ellipse>
+      <g transform="translate(74,46)">
+        <g style="fill:var(--pink-400)">
+          <ellipse cx="0" cy="-11" rx="5.5" ry="8"></ellipse>
+          <ellipse cx="10" cy="-5" rx="5.5" ry="8" transform="rotate(72 10 -5)"></ellipse>
+          <ellipse cx="7" cy="9" rx="5.5" ry="8" transform="rotate(144 7 9)"></ellipse>
+          <ellipse cx="-7" cy="9" rx="5.5" ry="8" transform="rotate(216 -7 9)"></ellipse>
+          <ellipse cx="-10" cy="-5" rx="5.5" ry="8" transform="rotate(288 -10 -5)"></ellipse>
+        </g>
+        <circle cx="0" cy="0" r="5" fill="#ffe58a"></circle>
+      </g>
+      <path d="M200 92 C198 65 206 45 200 24" stroke="#4c8a5c" stroke-width="4" fill="none" stroke-linecap="round"></path>
+      <ellipse cx="184" cy="58" rx="13" ry="6.5" fill="#5a9c6c" transform="rotate(-20 184 58)"></ellipse>
+      <ellipse cx="216" cy="70" rx="13" ry="6.5" fill="#5a9c6c" transform="rotate(20 216 70)"></ellipse>
+      <g transform="translate(200,22)">
+        <g fill="#ffce45">
+          <ellipse cx="0" cy="-20" rx="8" ry="13"></ellipse>
+          <ellipse cx="14" cy="-15" rx="8" ry="13" transform="rotate(40 14 -15)"></ellipse>
+          <ellipse cx="19" cy="0" rx="8" ry="13" transform="rotate(80 19 0)"></ellipse>
+          <ellipse cx="14" cy="15" rx="8" ry="13" transform="rotate(120 14 15)"></ellipse>
+          <ellipse cx="0" cy="20" rx="8" ry="13" transform="rotate(160 0 20)"></ellipse>
+          <ellipse cx="-14" cy="15" rx="8" ry="13" transform="rotate(200 -14 15)"></ellipse>
+          <ellipse cx="-19" cy="0" rx="8" ry="13" transform="rotate(240 -19 0)"></ellipse>
+          <ellipse cx="-14" cy="-15" rx="8" ry="13" transform="rotate(280 -14 -15)"></ellipse>
+        </g>
+        <circle cx="0" cy="0" r="13" fill="#8a5a2c"></circle>
+        <circle cx="0" cy="0" r="13" fill="none" stroke="#6e4420" stroke-width="1" opacity=".6"></circle>
+        <circle cx="-3" cy="-2" r="1.4" fill="#5c3a1e"></circle>
+        <circle cx="3" cy="1" r="1.4" fill="#5c3a1e"></circle>
+        <circle cx="0" cy="4" r="1.4" fill="#5c3a1e"></circle>
+        <circle cx="-4" cy="3" r="1.4" fill="#5c3a1e"></circle>
+        <circle cx="5" cy="-3" r="1.4" fill="#5c3a1e"></circle>
+      </g>
+      <path d="M340 92 C342 74 334 60 324 50" stroke="#5a9c6c" stroke-width="3" fill="none" stroke-linecap="round"></path>
+      <ellipse cx="334" cy="66" rx="10" ry="5" fill="#6cb17e" transform="rotate(35 334 66)"></ellipse>
+      <g transform="translate(326,46)">
+        <g style="fill:var(--pink-400)">
+          <ellipse cx="0" cy="-11" rx="5.5" ry="8"></ellipse>
+          <ellipse cx="10" cy="-5" rx="5.5" ry="8" transform="rotate(72 10 -5)"></ellipse>
+          <ellipse cx="7" cy="9" rx="5.5" ry="8" transform="rotate(144 7 9)"></ellipse>
+          <ellipse cx="-7" cy="9" rx="5.5" ry="8" transform="rotate(216 -7 9)"></ellipse>
+          <ellipse cx="-10" cy="-5" rx="5.5" ry="8" transform="rotate(288 -10 -5)"></ellipse>
+        </g>
+        <circle cx="0" cy="0" r="5" fill="#ffe58a"></circle>
+      </g>
+      </g>
+    </svg>
+  </div>
+
+  <div class="start-content">
+    <p class="start-emoji-row"><span>🎂</span><span>🎉</span><span>🎈</span></p>
+    <p class="start-title">For You, <span id="nameSlot">Friend</span> 💫</p>
+    <div class="start-date" aria-label="19 September">
+      <div class="start-date-badge">
+        <span class="start-date-spark spark-a" aria-hidden="true">✦</span>
+        <div class="start-date-core">
+          <span class="start-date-day" id="startDateDay">19</span>
+          <span class="start-date-month" id="startDateMonth">September</span>
+        </div>
+        <span class="start-date-spark spark-b" aria-hidden="true">✦</span>
+      </div>
+    </div>
+    <div class="start-gate" id="startGate">
+      <p class="start-gate-label" id="startGateLabel">Answer the question to move next</p>
+      <div class="start-gif-frame" id="startGifFrame"></div>
+      <p class="start-question" id="startQuestionText"></p>
+      <div class="start-gate-buttons" id="startGateButtons">
+        <button type="button" id="startYesBtn" class="start-yes-btn">Yes 💖</button>
+        <button type="button" id="startNoBtn" class="start-no-btn">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.9.9/Tone.js"></script>
+<script>
+(function(){
+  /* ================================================================
+     ✏️  EDIT YOUR CARD HERE (same CONFIG as the single file)
+     ================================================================ */
+  var CONFIG = {
+    name: "Najiba",
+    birthdayDay: "19",
+    birthdayMonth: "September",
+    loveGate: {
+      gif1: "gif/gif1.gif",
+      gif2: "gif/gif2.gif",
+      gif3: "gif/gif3.gif",
+      question: "Do you really love me? 🥺",
+      celebrateText: "Yay! I knew it all along 💖",
+      dodgeLabel: "catch it if you can! 👀",
+      dodgeText: "The No button ran away — guess that means Yes now! 😜",
+      noMessages: [
+        "Wait... why did you click No? 🥺",
+        "Hmm, are you really sure about that? 😢",
+        "Ouch, my heart just skipped a beat... 💔",
+        "Let's try that one more time, shall we? 👀",
+        "I know you love me really 😌",
+        "Okay, last chance... click Yes? 🥹"
+      ]
+    }
+  };
+
+  /* ---- utils ---- */
+  var REDUCED_MOTION = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var COLORS = ['#ff87c2','#ffb4d8','#aef0dc','#cbaeff','#ffe3cf','#fff2bf','#ffffff'];
+  function rand(a,b){ return Math.random()*(b-a)+a; }
+  function pick(arr){ return arr[(Math.random()*arr.length)|0]; }
+
+  /* ---- canvas particle system ---- */
+  function drawHeartPath(ctx,s){
+    ctx.beginPath();
+    ctx.moveTo(0, s*0.35);
+    ctx.bezierCurveTo(-s*0.1, s*0.05, -s*0.5, s*0.05, -s*0.5, -s*0.25);
+    ctx.bezierCurveTo(-s*0.5, -s*0.55, -s*0.15, -s*0.6, 0, -s*0.3);
+    ctx.bezierCurveTo(s*0.15, -s*0.6, s*0.5, -s*0.55, s*0.5, -s*0.25);
+    ctx.bezierCurveTo(s*0.5, s*0.05, s*0.1, s*0.05, 0, s*0.35);
+    ctx.closePath();
+  }
+  function drawStarPath(ctx,s){
+    var spikes=5, outerR=s/2, innerR=outerR*0.42, rot=-Math.PI/2, step=Math.PI/spikes;
+    ctx.beginPath();
+    ctx.moveTo(0,-outerR);
+    for(var i=0;i<spikes;i++){
+      rot += step; ctx.lineTo(Math.cos(rot)*innerR, Math.sin(rot)*innerR);
+      rot += step; ctx.lineTo(Math.cos(rot)*outerR, Math.sin(rot)*outerR);
+    }
+    ctx.closePath();
+  }
+  function drawParticle(ctx,p){
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, Math.min(1, p.life)) * (p.fade!==undefined ? p.fade : 1);
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot);
+    ctx.fillStyle = p.color;
+    if(p.kind === 'confetti'){
+      ctx.fillRect(-p.size/2, -p.size*0.18, p.size, p.size*0.36);
+    } else if(p.kind === 'heart'){
+      drawHeartPath(ctx,p.size); ctx.fill();
+    } else if(p.kind === 'star'){
+      var tw = 0.55 + 0.45*Math.sin(p.twinklePhase||0);
+      ctx.globalAlpha *= tw;
+      drawStarPath(ctx,p.size); ctx.fill();
+    } else if(p.kind === 'ribbon'){
+      ctx.strokeStyle = p.color; ctx.lineWidth = p.size*0.22; ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(-p.size*0.6,0);
+      ctx.quadraticCurveTo(0,-p.size*0.55, p.size*0.6, 0);
+      ctx.stroke();
+    } else if(p.kind === 'dot'){
+      ctx.beginPath(); ctx.arc(0,0,p.size/2,0,6.2832); ctx.fill();
+    } else if(p.kind === 'petal'){
+      ctx.beginPath();
+      ctx.ellipse(0, 0, p.size*0.55, p.size*0.32, 0, 0, 6.2832);
+      ctx.fill();
+    } else if(p.kind === 'rocket'){
+      ctx.fillStyle = 'rgba(255,255,255,0.35)';
+      ctx.beginPath(); ctx.arc(0,0,p.size*1.8,0,6.2832); ctx.fill();
+      ctx.fillStyle = p.color;
+      ctx.beginPath(); ctx.arc(0,0,p.size*0.6,0,6.2832); ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function makeField(canvas, opts){
+    var ctx = canvas.getContext('2d');
+    var dpr = Math.max(1, window.devicePixelRatio || 1);
+    var fadeMul = (opts && opts.fade) || 1;
+    var W=0, H=0, particles=[], running=false, rafId=null, lastT=null;
+
+    function resize(){
+      var r = canvas.getBoundingClientRect();
+      W = r.width; H = r.height;
+      canvas.width = Math.max(1, Math.round(W*dpr));
+      canvas.height = Math.max(1, Math.round(H*dpr));
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    resize();
+
+    function spawnAmbient(kind){
+      var p = { kind:kind, color:pick(COLORS), rot:rand(0,6.28), rotSpeed:rand(-2,2),
+        wobble:rand(6,16), wobbleSpeed:rand(0.8,2.2), wobblePhase:rand(0,6.28), life:1, decay:0, fade:fadeMul };
+      if(kind==='confetti'){
+        p.size=rand(7,14); p.x=rand(0,W); p.y=rand(-H*0.4,0); p.vx=rand(-10,10); p.vy=rand(28,50); p.gravity=rand(14,22); p.drag=0.35;
+      } else if(kind==='heart'){
+        p.size=rand(10,17); p.x=rand(0,W); p.y=H+rand(0,H*0.3); p.vx=rand(-6,6); p.vy=-rand(16,26); p.gravity=-rand(1,4); p.drag=0.2;
+      } else if(kind==='star'){
+        p.size=rand(6,11); p.x=rand(0,W); p.y=rand(0,H); p.vx=0; p.vy=0; p.gravity=0; p.drag=0; p.twinklePhase=rand(0,6.28); p.twinkleSpeed=rand(1.2,2.4);
+      } else if(kind==='ribbon'){
+        p.size=rand(20,32); p.x=rand(0,W); p.y=rand(-H*0.3,H*0.5); p.vx=rand(-4,4); p.vy=rand(6,14); p.gravity=rand(2,6); p.drag=0.3;
+      } else if(kind==='petal'){
+        p.size=rand(9,15); p.x=rand(0,W); p.y=rand(-H*0.3,0); p.vx=rand(-5,5); p.vy=rand(10,20); p.gravity=rand(3,7); p.drag=0.25;
+      }
+      return p;
+    }
+    function seedAmbient(kinds, countEach){
+      particles = [];
+      kinds.forEach(function(k){ for(var i=0;i<countEach;i++) particles.push(spawnAmbient(k)); });
+    }
+    function burst(x,y,count){
+      for(var i=0;i<count;i++){
+        var isHeart = i % 4 === 0;
+        var angle = rand(0,6.28), speed = rand(70,230);
+        particles.push({
+          kind: isHeart ? 'heart' : (i % 2 ? 'confetti' : 'dot'),
+          color: pick(COLORS), size: isHeart ? rand(10,15) : rand(6,12),
+          x:x, y:y, vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed-70,
+          gravity:170, drag:0.4, rot:rand(0,6.28), rotSpeed:rand(-7,7),
+          wobble:0, wobbleSpeed:0, wobblePhase:0, life:1, decay:rand(0.5,0.85), fade:1
+        });
+      }
+    }
+    function ringBurst(x,y,count){
+      var speed = rand(150,195);
+      for(var i=0;i<count;i++){
+        var angle = (i/count) * 6.2832 + rand(-0.05,0.05);
+        var isHeart = i % 6 === 0;
+        particles.push({
+          kind: isHeart ? 'heart' : (i % 2 ? 'star' : 'dot'),
+          color: pick(COLORS), size: isHeart ? rand(10,14) : rand(6,10),
+          x:x, y:y, vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed,
+          gravity:150, drag:0.38, rot:rand(0,6.28), rotSpeed:rand(-6,6),
+          wobble:0, wobbleSpeed:0, wobblePhase:0, life:1, decay:rand(0.55,0.8), fade:1,
+          twinklePhase:rand(0,6.28), twinkleSpeed:rand(1.5,3)
+        });
+      }
+    }
+    function sparkleBurst(x,y,count,kinds){
+      kinds = (kinds && kinds.length) ? kinds : ['heart','star'];
+      for(var i=0;i<count;i++){
+        var kind = kinds[i % kinds.length];
+        var angle = rand(-Math.PI*0.92, -Math.PI*0.08);
+        var speed = rand(14,42);
+        particles.push({
+          kind:kind, color:pick(COLORS), size: kind==='heart' ? rand(5,8.5) : rand(4,7),
+          x:x+rand(-8,8), y:y+rand(-6,6),
+          vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed,
+          gravity:-9, drag:0.5, rot:rand(-0.3,0.3), rotSpeed:rand(-1.5,1.5),
+          wobble:rand(5,11), wobbleSpeed:rand(1,2.3), wobblePhase:rand(0,6.28),
+          life:1, decay:rand(0.34,0.52), fade:1,
+          twinklePhase:rand(0,6.28), twinkleSpeed:rand(2,3.4)
+        });
+      }
+    }
+
+    function update(p,dt){
+      p.vy += p.gravity*dt;
+      if(p.drag){ p.vx -= p.vx*p.drag*dt; p.vy -= (p.vy*p.drag*0.3)*dt; }
+      var wob = p.wobble ? Math.sin((p.wobblePhase||0)+performance.now()*0.001*(p.wobbleSpeed||1))*p.wobble*dt : 0;
+      p.x += (p.vx||0)*dt + wob;
+      p.y += (p.vy||0)*dt;
+      p.rot += (p.rotSpeed||0)*dt;
+      if(p.kind==='star') p.twinklePhase = (p.twinklePhase||0) + (p.twinkleSpeed||1.5)*dt;
+      if(p.decay) p.life -= p.decay*dt;
+    }
+    function loop(t){
+      if(!running) return;
+      if(lastT===null) lastT=t;
+      var dt = Math.min(0.05,(t-lastT)/1000);
+      lastT = t;
+      ctx.clearRect(0,0,W,H);
+      for(var i=particles.length-1;i>=0;i--){
+        var p = particles[i];
+        update(p,dt);
+        if(p.decay && p.life<=0){ particles.splice(i,1); continue; }
+        var offBottom = p.y > H+40 && (p.vy||0) > 0;
+        var offTop = p.y < -40 && (p.vy||0) < 0;
+        if(!p.decay && (offBottom||offTop)){ particles[i] = spawnAmbient(p.kind); continue; }
+        drawParticle(ctx,p);
+      }
+      rafId = requestAnimationFrame(loop);
+    }
+    return {
+      start: function(){ if(running) return; running=true; lastT=null; rafId=requestAnimationFrame(loop); },
+      stop: function(){ running=false; if(rafId) cancelAnimationFrame(rafId); ctx.clearRect(0,0,W,H); },
+      seedAmbient: seedAmbient,
+      burst: burst,
+      ringBurst: ringBurst,
+      sparkleBurst: sparkleBurst,
+      resize: resize,
+      getDimensions: function(){ return {W:W, H:H}; }
+    };
+  }
+
+  /* ---- initialise ---- */
+  var startCanvas = document.getElementById('startCanvas');
+  var startField = makeField(startCanvas);
+  if(!REDUCED_MOTION){
+    startField.seedAmbient(['star','heart'], 6);
+    startField.start();
+  }
+
+  /* ---- apply name & date ---- */
+  var name = CONFIG.name || 'Friend';
+  document.getElementById('nameSlot').textContent = name;
+  document.title = name + "'s Birthday 🎉";
+  document.getElementById('startDateDay').textContent = CONFIG.birthdayDay;
+  document.getElementById('startDateMonth').textContent = CONFIG.birthdayMonth;
+
+  /* ---- love gate mini‑game ---- */
+  var gate = document.getElementById('startGate');
+  var qEl = document.getElementById('startQuestionText');
+  var yesBtn = document.getElementById('startYesBtn');
+  var noBtn = document.getElementById('startNoBtn');
+  var label = document.getElementById('startGateLabel');
+  var gifFrame = document.getElementById('startGifFrame');
+
+  function setGateMedia(src, fallbackEmoji){
+    gifFrame.innerHTML = '';
+    if(!src){
+      gifFrame.innerHTML = '<span class="start-gif-fallback">' + (fallbackEmoji||'💌') + '</span>';
+      return;
+    }
+    var img = document.createElement('img');
+    img.className = 'start-gate-gif';
+    img.alt = 'reaction gif';
+    img.onerror = function(){ gifFrame.innerHTML = '<span class="start-gif-fallback">' + (fallbackEmoji||'💌') + '</span>'; };
+    img.src = src;
+    gifFrame.appendChild(img);
+  }
+  setGateMedia(CONFIG.loveGate.gif1, '💌');
+  qEl.textContent = CONFIG.loveGate.question;
+
+  var loveNoCount = 0;
+  var loveAnswered = false;
+  var loveEvasive = false;
+  var dodgeInterval = null;
+
+  function randomDodgePosition(){
+    var overlay = document.getElementById('startOverlay');
+    if(!overlay) return;
+    var rect = overlay.getBoundingClientRect();
+    var bw = noBtn.offsetWidth || 74, bh = noBtn.offsetHeight || 36;
+    var pad = 12;
+    var maxLeft = Math.max(pad, rect.width - bw - pad);
+    var minTop = rect.height * 0.16;
+    var maxTop = Math.max(minTop, rect.height * 0.84 - bh);
+    noBtn.style.left = rand(pad, maxLeft) + 'px';
+    noBtn.style.top = rand(minTop, maxTop) + 'px';
+  }
+
+  function activateNoDodge(){
+    if(loveEvasive) return;
+    loveEvasive = true;
+    qEl.textContent = CONFIG.loveGate.dodgeText;
+    label.textContent = CONFIG.loveGate.dodgeLabel;
+    var overlay = document.getElementById('startOverlay');
+    overlay.appendChild(noBtn);
+    noBtn.classList.add('dodge');
+    randomDodgePosition();
+    dodgeInterval = setInterval(randomDodgePosition, 1100);
+    noBtn.addEventListener('pointerenter', randomDodgePosition);
+  }
+
+  noBtn.addEventListener('click', function(){
+    if(loveAnswered) return;
+    if(loveEvasive){ randomDodgePosition(); return; }
+    loveNoCount++;
+    var msgs = CONFIG.loveGate.noMessages;
+    setGateMedia(CONFIG.loveGate.gif2, '😤');
+    qEl.textContent = msgs[(loveNoCount-1) % msgs.length];
+    gate.classList.remove('shake');
+    void gate.offsetWidth;
+    gate.classList.add('shake');
+    var shrink = Math.max(0.7, 1 - loveNoCount*0.05);
+    var grow = Math.min(1.22, 1 + loveNoCount*0.045);
+    noBtn.style.setProperty('--nudge', String(shrink));
+    yesBtn.style.setProperty('--nudge', String(grow));
+    if(loveNoCount >= msgs.length){ activateNoDodge(); }
+  });
+
+  /* ---- audio init for chime ---- */
+  var chimeSynth = null;
+  function initAudio(){
+    if(!window.Tone) return Promise.resolve();
+    return Tone.start().then(function(){
+      if(Tone.context.state !== 'running') return Tone.context.resume();
+    }).then(function(){
+      try{
+        if(!chimeSynth){
+          chimeSynth = new Tone.Synth({ oscillator:{type:'sine'}, envelope:{attack:0.005,decay:0.25,sustain:0,release:0.25} }).toDestination();
+          chimeSynth.volume.value = -14;
+        }
+      }catch(e){}
+    }).catch(function(){});
+  }
+  function playChime(){
+    if(!chimeSynth) return;
+    try{
+      chimeSynth.triggerAttackRelease('C6','16n');
+      setTimeout(function(){ try{ chimeSynth.triggerAttackRelease('E6','16n'); }catch(e){} }, 100);
+    }catch(e){}
+  }
+
+  function handleYesTap(e){
+    if(loveAnswered) return;
+    loveAnswered = true;
+    if(e && e.type === 'touchend' && e.cancelable) e.preventDefault();
+    if(dodgeInterval){ clearInterval(dodgeInterval); dodgeInterval = null; }
+
+    setGateMedia(CONFIG.loveGate.gif3, '🎉');
+    label.textContent = 'Yay! 🎉';
+    qEl.textContent = CONFIG.loveGate.celebrateText;
+    noBtn.style.display = 'none';
+    yesBtn.classList.add('celebrate');
+    gate.classList.add('celebrated');
+
+    var canvasRect = startCanvas.getBoundingClientRect();
+    var fr = gifFrame.getBoundingClientRect();
+    var cx = fr.left + fr.width/2 - canvasRect.left;
+    var cy = fr.top + fr.height/2 - canvasRect.top;
+    startField.ringBurst(cx, cy, 26);
+    startField.sparkleBurst(cx, cy, 20, ['heart','star']);
+    setTimeout(function(){ startField.burst(cx, cy, 24); }, 220);
+    setTimeout(function(){ startField.sparkleBurst(cx, cy - 24, 16, ['heart']); }, 480);
+    setTimeout(function(){
+      var dims = startField.getDimensions();
+      for(var i=0;i<3;i++){
+        (function(i){
+          setTimeout(function(){
+            startField.burst(rand(dims.W*0.2, dims.W*0.8), rand(dims.H*0.15, dims.H*0.55), 16);
+          }, i*140);
+        })(i);
+      }
+    }, 700);
+
+    initAudio().then(function(){
+      playChime();
+      setTimeout(function(){
+        window.location.href = '1.html';
+      }, 1150);
+    });
+  }
+
+  yesBtn.addEventListener('click', handleYesTap);
+  yesBtn.addEventListener('touchend', handleYesTap, { passive:false });
+
+  /* resize handler */
+  window.addEventListener('resize', function(){
+    startField.resize();
+  });
+
+  /* hide overlay after transition (not needed for redirect, but clean) */
+  // No action required as we redirect.
+})();
+</script>
+</body>
+</html>
