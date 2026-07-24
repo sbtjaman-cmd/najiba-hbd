@@ -73,7 +73,7 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
 
 .content{ position:relative; z-index:2; }
 
-/* ===== PAGE 1: collage ===== */
+/* ===== PAGE 1: collage (legacy grid rules kept intact, no longer used by the markup below) ===== */
 .page1{ padding-top:6%; padding-bottom:24%; justify-content:flex-start; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior-y:contain; -webkit-transform-style:flat; transform-style:flat; will-change:scroll-position; }
 .page1-canvas{ position:absolute; inset:0; z-index:1; pointer-events:none; }
 .collage-title{ font-family:var(--font-script); font-size:clamp(15px,4.6vw,19px); color:var(--pink-700); margin:0 0 3.6vw; opacity:0; }
@@ -119,6 +119,85 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
 .photo-placeholder .ph-label{ font-size:10px; line-height:1.3; }
 .photo-placeholder .ph-debug{ font-size:8px; font-weight:600; opacity:.75; word-break:break-all; }
 
+/* ===== NEW: PAGE 1 PREMIUM SCRAPBOOK ===== */
+.scrapbook-content{
+  position:relative; width:100%; z-index:2;
+  display:flex; flex-direction:column; align-items:center;
+  padding-top:9vw;
+}
+
+/* paper grain */
+.paper-grain{ position:absolute; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; opacity:.15; mix-blend-mode:multiply; }
+
+/* fairy light garland */
+.fairy-lights-svg{ position:absolute; top:0; left:-3%; width:106%; height:9vw; min-height:30px; max-height:42px; z-index:4; overflow:visible; pointer-events:none; opacity:0; }
+.page1.active .fairy-lights-svg{ animation:fairyDropIn .8s cubic-bezier(.34,1.56,.64,1) .05s forwards; }
+@keyframes fairyDropIn{ 0%{ opacity:0; transform:translateY(-9px); } 100%{ opacity:1; transform:translateY(0); } }
+#fairyWire{ opacity:.85; }
+.fairy-bulb{ animation:bulbFlicker 2.6s ease-in-out infinite; animation-delay:var(--fd,0s); transform-origin:center; filter:drop-shadow(0 0 2.2px rgba(255,255,255,.85)); }
+@keyframes bulbFlicker{ 0%,100%{ opacity:1; } 42%{ opacity:.72; } 50%{ opacity:1; } 74%{ opacity:.86; } }
+
+/* hand-drawn doodles */
+.scrap-doodles{ position:absolute; inset:0; width:100%; height:100%; z-index:3; pointer-events:none; overflow:visible; }
+.scrap-doodles .doodle{ opacity:0; transform-origin:center; }
+.scrap-doodles .doodle *{ fill:none; stroke:var(--pink-400); stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.page1.active .scrap-doodles .doodle{
+  animation:
+    doodleFadeIn .6s ease forwards calc(var(--di,0) * .14s + .9s),
+    doodleWiggle 4.4s ease-in-out infinite calc(var(--di,0) * .14s + 1.6s);
+}
+@keyframes doodleFadeIn{ from{ opacity:0; } to{ opacity:.85; } }
+@keyframes doodleWiggle{ 0%,100%{ transform:rotate(0deg) translateY(0); } 50%{ transform:rotate(5deg) translateY(-2px); } }
+
+/* hero */
+.scrap-hero-area{ position:relative; z-index:2; width:75%; max-width:280px; margin:0 auto 6vw; }
+.hero-glow{ position:absolute; z-index:0; inset:-14% -10% -6%; background:radial-gradient(closest-side, rgba(255,199,227,.6), rgba(255,199,227,0) 72%); filter:blur(7px); pointer-events:none; }
+
+/* shared mat */
+.photo-mat{ position:relative; background:var(--white); box-shadow:0 12px 26px rgba(240,71,156,.3), 0 3px 9px rgba(107,47,76,.16); opacity:0; }
+.page1.active .photo-mat{ animation:matPopIn .65s cubic-bezier(.34,1.56,.64,1) forwards; }
+.page1.active .hero-mat{ animation-delay:.2s; }
+.page1.active .scrap-support-grid .photo-mat{ animation-delay:calc(var(--i,0) * .3s + .5s); }
+@keyframes matPopIn{ 0%{ opacity:0; transform:translateY(18px) scale(.9); } 65%{ opacity:1; transform:translateY(-3px) scale(1.04); } 100%{ opacity:1; transform:translateY(0) scale(1); } }
+
+/* torn paper edge + thickness shadow */
+.torn-mat{
+  padding:7% 7% 13%;
+  clip-path:polygon(
+    0% 4%, 6% 0%, 12% 3%, 18% 0%, 24% 4%, 30% 0%, 36% 3%, 42% 0%, 48% 4%, 54% 0%, 60% 3%, 66% 0%, 72% 4%, 78% 0%, 84% 3%, 90% 0%, 96% 4%, 100% 0%,
+    100% 100%,
+    96% 96%, 90% 100%, 84% 97%, 78% 100%, 72% 96%, 66% 100%, 60% 97%, 54% 100%, 48% 96%, 42% 100%, 36% 97%, 30% 100%, 24% 96%, 18% 100%, 12% 97%, 6% 100%, 0% 96%
+  );
+}
+.torn-mat::after{
+  content:'';
+  position:absolute; left:3%; right:3%; bottom:2%; height:11%;
+  background:linear-gradient(to bottom, rgba(107,47,76,0), rgba(107,47,76,.24));
+  pointer-events:none;
+}
+
+/* vintage photo-corner accents */
+.mat-corner{ position:absolute; width:15px; height:15px; z-index:2; pointer-events:none; }
+.mat-corner.tl{ top:6%; left:6%; background:linear-gradient(135deg, rgba(255,255,255,.95), rgba(255,255,255,.3) 55%, transparent 60%); clip-path:polygon(0 0,100% 0,0 100%); box-shadow:1px 1px 2px rgba(107,47,76,.2); }
+.mat-corner.br{ bottom:6%; right:6%; background:linear-gradient(-45deg, rgba(255,255,255,.95), rgba(255,255,255,.3) 55%, transparent 60%); clip-path:polygon(100% 100%,100% 0%,0% 100%); box-shadow:-1px -1px 2px rgba(107,47,76,.2); }
+
+/* washi tape */
+.tape{ position:absolute; width:44px; height:14px; border-radius:1px; opacity:.85; box-shadow:0 2px 5px rgba(107,47,76,.18); z-index:3; pointer-events:none; }
+.tape::before{ content:''; position:absolute; inset:0; background:repeating-linear-gradient(115deg, rgba(255,255,255,.4) 0 2px, transparent 2px 6px); mix-blend-mode:overlay; }
+
+/* image slot (new photos live here) */
+.photo-slot{ width:100%; height:100%; aspect-ratio:1/1; border-radius:6px; overflow:hidden; display:block; background:var(--pink-50); }
+.photo-slot img{ width:100%; height:100%; object-fit:cover; display:block; cursor:zoom-in; -webkit-user-drag:none; animation:photoBreathe 7s ease-in-out infinite; animation-delay:var(--bd,0s); transform-origin:center; }
+
+/* supporting grid */
+.scrap-support-grid{ position:relative; z-index:2; display:grid; grid-template-columns:repeat(3,1fr); gap:3.6vw; width:100%; max-width:300px; margin:0 auto; }
+
+/* idle float fallback (touch devices with no orientation signal) */
+.idle-float-hero{ animation:idleFloatA 6.2s ease-in-out infinite; }
+.idle-float-grid{ animation:idleFloatB 7s ease-in-out infinite; }
+@keyframes idleFloatA{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(3px,-4px); } }
+@keyframes idleFloatB{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(-3px,4px); } }
+
 /* ===== LIGHTBOX ===== */
 .lightbox{ position:absolute; inset:0; z-index:20; background:rgba(40,10,25,.72); display:flex; align-items:center; justify-content:center; padding:9%; opacity:0; pointer-events:none; transition:opacity .25s ease; }
 .lightbox.show{ opacity:1; pointer-events:auto; }
@@ -157,13 +236,69 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
   <div class="viewport">
     <canvas class="ambient-canvas" id="ambientCanvas"></canvas>
 
-    <!-- PAGE 1 : COLLAGE -->
+    <!-- PAGE 1 : PREMIUM SCRAPBOOK -->
     <section class="page page1 active">
       <div class="bg-pastel bg-pink-soft"></div>
       <canvas class="page1-canvas" id="page1Canvas"></canvas>
-      <p class="collage-title content">🌙 prettier than any moonlit night</p>
-      <div class="collage-grid content" id="collageGrid"></div>
-      <p class="collage-caption content"><span id="nameSlot">Friend</span>, you bloom brighter than every flower 🌸</p>
+
+      <div class="scrapbook-content content" id="scrapbookContent">
+
+        <svg class="paper-grain" aria-hidden="true" focusable="false">
+          <filter id="paperNoiseFilter" color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" result="noise"></feTurbulence>
+            <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0.42  0 0 0 0 0.18  0 0 0 0 0.3  0 0 0 0.9 0"></feColorMatrix>
+          </filter>
+          <rect width="100%" height="100%" filter="url(#paperNoiseFilter)"></rect>
+        </svg>
+
+        <svg class="fairy-lights-svg" id="fairyLightsSvg" viewBox="-8 -8 316 56" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="wireGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#d6b98a"></stop>
+              <stop offset="0.5" stop-color="#f3e0ae"></stop>
+              <stop offset="1" stop-color="#d6b98a"></stop>
+            </linearGradient>
+            <radialGradient id="bulbGrad0" cx="35%" cy="30%" r="70%">
+              <stop offset="0" stop-color="#fff6fa"></stop><stop offset=".45" stop-color="#ff87c2"></stop><stop offset="1" stop-color="#d6318a"></stop>
+            </radialGradient>
+            <radialGradient id="bulbGrad1" cx="35%" cy="30%" r="70%">
+              <stop offset="0" stop-color="#f2fffa"></stop><stop offset=".45" stop-color="#7fe3c4"></stop><stop offset="1" stop-color="#2f9c7c"></stop>
+            </radialGradient>
+            <radialGradient id="bulbGrad2" cx="35%" cy="30%" r="70%">
+              <stop offset="0" stop-color="#faf5ff"></stop><stop offset=".45" stop-color="#cbaeff"></stop><stop offset="1" stop-color="#9a6ee8"></stop>
+            </radialGradient>
+            <radialGradient id="bulbGrad3" cx="35%" cy="30%" r="70%">
+              <stop offset="0" stop-color="#fffdf2"></stop><stop offset=".45" stop-color="#ffe07a"></stop><stop offset="1" stop-color="#e8b93a"></stop>
+            </radialGradient>
+            <radialGradient id="bulbGrad4" cx="35%" cy="30%" r="70%">
+              <stop offset="0" stop-color="#fff9f2"></stop><stop offset=".45" stop-color="#ffb37a"></stop><stop offset="1" stop-color="#e88a3a"></stop>
+            </radialGradient>
+          </defs>
+          <path id="fairyWire" d="M-4,10 Q40,44 96,20 Q152,-6 208,20 Q256,42 304,10" fill="none" stroke="url(#wireGrad)" stroke-width="1.3" stroke-dasharray="1 3.4" stroke-linecap="round"></path>
+          <g id="fairyBulbs"></g>
+        </svg>
+
+        <svg class="scrap-doodles" id="scrapDoodles" viewBox="0 0 300 460" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+          <g transform="translate(26,66) rotate(-8)"><g class="doodle" style="--di:0"><path d="M0,4.2C-1.1,1.4-4.4,1.1-4.6-2.2C-4.7-4.6-2.2-5.4,0-3.1C2.2-5.4,4.7-4.6,4.6-2.2C4.4,1.1,1.1,1.4,0,4.2Z"></path></g></g>
+          <g transform="translate(272,58) rotate(10)"><g class="doodle" style="--di:1"><path d="M0,-5.4L1.3,-1.8L5,-1.6L2.1,0.9L3.1,4.7L0,2.5L-3.1,4.7L-2.1,0.9L-5,-1.6L-1.3,-1.8Z"></path></g></g>
+          <g transform="translate(16,236) rotate(6)"><g class="doodle" style="--di:2"><path d="M-6,3 Q0,-7 6,3 M6,3 L2,1.6 M6,3 L3.4,6.2"></path></g></g>
+          <g transform="translate(284,230) rotate(-14)"><g class="doodle" style="--di:3"><g><ellipse cx="0" cy="-4.2" rx="2.6" ry="4"></ellipse><ellipse cx="4" cy="-1.3" rx="2.6" ry="4" transform="rotate(72 4 -1.3)"></ellipse><ellipse cx="2.5" cy="3.8" rx="2.6" ry="4" transform="rotate(144 2.5 3.8)"></ellipse><ellipse cx="-2.5" cy="3.8" rx="2.6" ry="4" transform="rotate(216 -2.5 3.8)"></ellipse><ellipse cx="-4" cy="-1.3" rx="2.6" ry="4" transform="rotate(288 -4 -1.3)"></ellipse><circle r="1.4"></circle></g></g></g>
+          <g transform="translate(150,398) rotate(4)"><g class="doodle" style="--di:4"><path d="M0,4.2C-1.1,1.4-4.4,1.1-4.6-2.2C-4.7-4.6-2.2-5.4,0-3.1C2.2-5.4,4.7-4.6,4.6-2.2C4.4,1.1,1.1,1.4,0,4.2Z"></path></g></g>
+          <g transform="translate(38,412) rotate(-10)"><g class="doodle" style="--di:5"><path d="M0,-5.4L1.3,-1.8L5,-1.6L2.1,0.9L3.1,4.7L0,2.5L-3.1,4.7L-2.1,0.9L-5,-1.6L-1.3,-1.8Z"></path></g></g>
+          <g transform="translate(258,404) rotate(12)"><g class="doodle" style="--di:6"><path d="M-6,3 Q0,-7 6,3 M6,3 L2,1.6 M6,3 L3.4,6.2"></path></g></g>
+        </svg>
+
+        <p class="collage-title content">🌙 prettier than any moonlit night</p>
+
+        <div class="scrap-hero-area" id="scrapHeroArea">
+          <div class="hero-glow"></div>
+          <div class="photo-mat torn-mat hero-mat" id="heroMat"></div>
+        </div>
+
+        <div class="scrap-support-grid" id="scrapSupportGrid"></div>
+
+        <p class="collage-caption content"><span id="nameSlot">Friend</span>, you bloom brighter than every flower 🌸</p>
+      </div>
     </section>
   </div>
 
@@ -209,6 +344,7 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
   var COLORS = ['#ff87c2','#ffb4d8','#aef0dc','#cbaeff','#ffe3cf','#fff2bf','#ffffff'];
   function rand(a,b){ return Math.random()*(b-a)+a; }
   function pick(arr){ return arr[(Math.random()*arr.length)|0]; }
+  function clampNum(v,a,b){ return Math.max(a, Math.min(b, v)); }
 
   /* ---- canvas particle drawing ---- */
   function drawHeartPath(ctx,s){
@@ -359,7 +495,9 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
   var stage = document.getElementById('stage');
   var ambientCanvas = document.getElementById('ambientCanvas');
   var page1Canvas = document.getElementById('page1Canvas');
-  var collageGrid = document.getElementById('collageGrid');
+  var scrapHeroArea = document.getElementById('scrapHeroArea');
+  var heroMat = document.getElementById('heroMat');
+  var scrapSupportGrid = document.getElementById('scrapSupportGrid');
   var lightbox = document.getElementById('lightbox');
   var lightboxImg = document.getElementById('lightboxImg');
 
@@ -380,12 +518,17 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
   document.getElementById('nameSlot').textContent = CONFIG.name || 'Friend';
   document.title = (CONFIG.name || 'Friend') + "'s Birthday 🎉";
 
-  /* ---- collage build ---- */
-  var COLLAGE_ROTATIONS = [-4, 3, -3, 4, -2, 2, -5, 5];
-  var COLLAGE_TAPE_ANGLES = [-6, 8, -8, 6, -5, 5, -7, 7];
-  var COLLAGE_DELAYS = [0, .35, .7, 1.05, .18, .53, .88, 1.2];
-  var COLLAGE_BREATHE_DELAYS = [0, 1.6, .8, 2.3, 1.1, .3, 1.9, .6];
-  var COLLAGE_SPARKLE_DELAYS = [.4, 1.3, .1, 1.9, .7, 1.6, .2, 2.1];
+  /* ---- scrapbook build ---- */
+  var SUPPORT_ROTATIONS = [-6, 4, -3, 5, -4, 6];
+  var SUPPORT_TILT_DELAYS = [0, .9, .4, 1.6, .7, 1.1];
+  var SUPPORT_BREATHE_DELAYS = [.2, 1.4, .6, 2.0, 1.0, .3];
+  var TAPE_COLORS = ['var(--pink-300)', 'var(--peach-200)', 'var(--lav-400)', 'var(--butter-200)'];
+  var TAPE_SPOTS = [
+    { top:'-5%', left:'14%', rot:-9 },
+    { top:'-4%', left:'82%', rot:7 },
+    { bottom:'-4%', left:'20%', rot:6 },
+    { bottom:'-5%', left:'78%', rot:-7 }
+  ];
 
   function placeholderTile(label, debug){
     var d = document.createElement('div');
@@ -393,46 +536,6 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
     d.innerHTML = '<span class="ph-icon">🖼️</span><span class="ph-label">' + label + '</span>' +
       (debug ? '<span class="ph-debug">' + debug + '</span>' : '');
     return d;
-  }
-
-  function buildCollage(){
-    collageGrid.innerHTML = '';
-    CONFIG.collagePhotos.forEach(function(src, i){
-      var frame = document.createElement('div');
-      frame.className = 'frame';
-      frame.style.setProperty('--i', i);
-      frame.style.setProperty('--tape', COLLAGE_TAPE_ANGLES[i % COLLAGE_TAPE_ANGLES.length] + 'deg');
-      frame.style.setProperty('--bd', COLLAGE_BREATHE_DELAYS[i % COLLAGE_BREATHE_DELAYS.length] + 's');
-      frame.style.setProperty('--sd', COLLAGE_SPARKLE_DELAYS[i % COLLAGE_SPARKLE_DELAYS.length] + 's');
-      var tilt = document.createElement('div');
-      tilt.className = 'frame-tilt';
-      tilt.style.setProperty('--r', COLLAGE_ROTATIONS[i % COLLAGE_ROTATIONS.length] + 'deg');
-      tilt.style.setProperty('--d', COLLAGE_DELAYS[i % COLLAGE_DELAYS.length] + 's');
-      var media = document.createElement('div');
-      media.className = 'frame-media';
-      tilt.appendChild(media);
-      frame.appendChild(tilt);
-      if(CONFIG.collageTags && CONFIG.collageTags.length){
-        var tag = document.createElement('span');
-        tag.className = 'frame-tag';
-        tag.textContent = CONFIG.collageTags[i % CONFIG.collageTags.length];
-        frame.appendChild(tag);
-      }
-      collageGrid.appendChild(frame);
-
-      // load photo
-      loadPhotoInto(media, src, 'Photo ' + (i+1), function(img){
-        img.addEventListener('click', function(){
-          var cRect = page1Canvas.getBoundingClientRect();
-          var iRect = img.getBoundingClientRect();
-          var cx = iRect.left + iRect.width/2 - cRect.left;
-          var cy = iRect.top + iRect.height/2 - cRect.top;
-          page1Field.sparkleBurst(cx, cy, 20, ['heart','star']);
-          playChime();
-          setTimeout(function(){ openLightbox(img.src); }, 180);
-        });
-      });
-    });
   }
 
   function loadPhotoInto(container, src, label, onReady){
@@ -453,6 +556,178 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
       container.appendChild(placeholderTile('couldn\u2019t load photo', src));
     };
     img.src = src;
+  }
+
+  function addMatCorners(mat){
+    ['tl','br'].forEach(function(pos){
+      var c = document.createElement('span');
+      c.className = 'mat-corner ' + pos;
+      mat.appendChild(c);
+    });
+  }
+
+  function addTapes(mat, count){
+    var spots = TAPE_SPOTS.slice().sort(function(){ return Math.random() - 0.5; });
+    var n = Math.max(2, Math.min(4, count));
+    for(var i=0;i<n;i++){
+      var spot = spots[i % spots.length];
+      var t = document.createElement('span');
+      t.className = 'tape';
+      if(spot.top) t.style.top = spot.top;
+      if(spot.bottom) t.style.bottom = spot.bottom;
+      t.style.left = spot.left;
+      t.style.background = pick(TAPE_COLORS);
+      t.style.transform = 'translateX(-50%) rotate(' + (spot.rot + rand(-4,4)).toFixed(1) + 'deg)';
+      mat.appendChild(t);
+    }
+  }
+
+  function attachScrapLightbox(img){
+    img.addEventListener('click', function(){
+      var cRect = page1Canvas.getBoundingClientRect();
+      var iRect = img.getBoundingClientRect();
+      var cx = iRect.left + iRect.width/2 - cRect.left;
+      var cy = iRect.top + iRect.height/2 - cRect.top;
+      page1Field.sparkleBurst(cx, cy, 20, ['heart','star']);
+      playChime();
+      setTimeout(function(){ openLightbox(img.src); }, 180);
+    });
+  }
+
+  function buildScrapbook(){
+    var photos = (CONFIG.collagePhotos || []).slice();
+    var tags = CONFIG.collageTags || [];
+    var heroSrc = photos[0];
+    var supportSrcs = photos.slice(1);
+
+    /* hero */
+    heroMat.innerHTML = '';
+    addMatCorners(heroMat);
+    addTapes(heroMat, 4);
+    var heroTilt = document.createElement('div');
+    heroTilt.className = 'frame-tilt';
+    heroTilt.style.setProperty('--r', '-2deg');
+    heroTilt.style.setProperty('--d', '0s');
+    var heroSlot = document.createElement('div');
+    heroSlot.className = 'photo-slot';
+    heroSlot.style.setProperty('--bd', '0s');
+    heroTilt.appendChild(heroSlot);
+    heroMat.appendChild(heroTilt);
+    if(tags[0]){
+      var heroTag = document.createElement('span');
+      heroTag.className = 'frame-tag';
+      heroTag.textContent = tags[0];
+      heroMat.appendChild(heroTag);
+    }
+    loadPhotoInto(heroSlot, heroSrc, 'Hero photo', function(img){
+      attachScrapLightbox(img);
+    });
+
+    /* supporting grid */
+    scrapSupportGrid.innerHTML = '';
+    supportSrcs.forEach(function(src, i){
+      var mat = document.createElement('div');
+      mat.className = 'photo-mat torn-mat';
+      mat.style.setProperty('--i', i);
+      var tilt = document.createElement('div');
+      tilt.className = 'frame-tilt';
+      tilt.style.setProperty('--r', SUPPORT_ROTATIONS[i % SUPPORT_ROTATIONS.length] + 'deg');
+      tilt.style.setProperty('--d', SUPPORT_TILT_DELAYS[i % SUPPORT_TILT_DELAYS.length] + 's');
+      var slot = document.createElement('div');
+      slot.className = 'photo-slot';
+      slot.style.setProperty('--bd', SUPPORT_BREATHE_DELAYS[i % SUPPORT_BREATHE_DELAYS.length] + 's');
+      tilt.appendChild(slot);
+      addMatCorners(mat);
+      addTapes(mat, 2 + (i % 3));
+      mat.appendChild(tilt);
+      if(tags[i+1]){
+        var tag = document.createElement('span');
+        tag.className = 'frame-tag';
+        tag.textContent = tags[i+1];
+        mat.appendChild(tag);
+      }
+      scrapSupportGrid.appendChild(mat);
+      loadPhotoInto(slot, src, 'Photo ' + (i+2), function(img){
+        attachScrapLightbox(img);
+      });
+    });
+  }
+
+  function buildFairyLights(){
+    var wire = document.getElementById('fairyWire');
+    var bulbsGroup = document.getElementById('fairyBulbs');
+    if(!wire || !bulbsGroup || !wire.getTotalLength) return;
+    bulbsGroup.innerHTML = '';
+    var len = wire.getTotalLength();
+    var count = 10;
+    var grads = ['bulbGrad0','bulbGrad1','bulbGrad2','bulbGrad3','bulbGrad4'];
+    var svgNS = 'http://www.w3.org/2000/svg';
+    for(var i=0;i<count;i++){
+      var t = (i+0.5)/count * len;
+      var pt = wire.getPointAtLength(t);
+      var g = document.createElementNS(svgNS,'g');
+      g.setAttribute('class','fairy-bulb');
+      g.setAttribute('transform','translate(' + pt.x.toFixed(2) + ',' + pt.y.toFixed(2) + ')');
+      g.style.setProperty('--fd', rand(0,2.4).toFixed(2) + 's');
+      var path = document.createElementNS(svgNS,'path');
+      path.setAttribute('d','M0,-4.6C2.6,-4.6 4.3,-2.4 4.3,0.3C4.3,3.1 2.4,5.4 0,7.6C-2.4,5.4 -4.3,3.1 -4.3,0.3C-4.3,-2.4 -2.6,-4.6 0,-4.6Z');
+      path.setAttribute('fill','url(#' + grads[i % grads.length] + ')');
+      var hi = document.createElementNS(svgNS,'circle');
+      hi.setAttribute('r','0.9'); hi.setAttribute('cy','-1.3'); hi.setAttribute('fill','#fff'); hi.setAttribute('opacity','.85');
+      g.appendChild(path);
+      g.appendChild(hi);
+      bulbsGroup.appendChild(g);
+    }
+  }
+
+  /* ---- parallax / interactive depth ---- */
+  function applyParallax(dx, dy){
+    var max = 5;
+    var hx = clampNum(dx*max, -max, max);
+    var hy = clampNum(dy*max, -max, max);
+    if(scrapHeroArea) scrapHeroArea.style.transform = 'translate(' + hx.toFixed(2) + 'px,' + hy.toFixed(2) + 'px)';
+    if(scrapSupportGrid) scrapSupportGrid.style.transform = 'translate(' + (-hx*0.6).toFixed(2) + 'px,' + (-hy*0.6).toFixed(2) + 'px)';
+  }
+  function onParallaxMouse(e){
+    var rect = stage.getBoundingClientRect();
+    var dx = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    var dy = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+    applyParallax(dx, dy);
+  }
+  function onParallaxReset(){
+    if(scrapHeroArea) scrapHeroArea.style.transform = '';
+    if(scrapSupportGrid) scrapSupportGrid.style.transform = '';
+  }
+  function initParallax(){
+    if(REDUCED_MOTION) return;
+    var finePointer = !!(window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches);
+    if(finePointer){
+      stage.addEventListener('mousemove', onParallaxMouse);
+      stage.addEventListener('mouseleave', onParallaxReset);
+      return;
+    }
+    var gotOrientation = false;
+    function onOrient(e){
+      if(e.beta===null && e.gamma===null) return;
+      if(!gotOrientation){
+        gotOrientation = true;
+        if(scrapHeroArea) scrapHeroArea.classList.remove('idle-float-hero');
+        if(scrapSupportGrid) scrapSupportGrid.classList.remove('idle-float-grid');
+      }
+      var gx = clampNum((e.gamma||0)/24, -1, 1);
+      var gy = clampNum(((e.beta||0)-45)/24, -1, 1);
+      applyParallax(gx, gy);
+    }
+    if(window.DeviceOrientationEvent){
+      window.addEventListener('deviceorientation', onOrient);
+    }
+    setTimeout(function(){
+      if(!gotOrientation){
+        if(window.DeviceOrientationEvent) window.removeEventListener('deviceorientation', onOrient);
+        if(scrapHeroArea) scrapHeroArea.classList.add('idle-float-hero');
+        if(scrapSupportGrid) scrapSupportGrid.classList.add('idle-float-grid');
+      }
+    }, 1000);
   }
 
   /* ---- lightbox ---- */
@@ -534,7 +809,9 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
   });
 
   /* start */
-  buildCollage();
+  buildScrapbook();
+  buildFairyLights();
+  initParallax();
 })();
 </script>
 </body>
