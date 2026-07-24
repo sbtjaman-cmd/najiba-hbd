@@ -6,7 +6,7 @@
 <title>🎈 Happy Birthday!</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Pacifico&family=Quicksand:wght@400;500;600;700&family=Baloo+2:wght@600;700;800&family=Fredoka:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700;1,800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Dancing+Script:wght@600;700&family=Quicksand:wght@400;500;600;700&family=Baloo+2:wght@600;700;800&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --pink-50:#fff6fa; --pink-100:#ffe6f1; --pink-150:#ffdcec; --pink-200:#ffc7e3;
@@ -120,8 +120,8 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
 .balloon svg{ display:block; width:100%; height:auto; overflow:visible; }
 .balloon-a{ left:7%; top:10%; }
 .balloon-b{ right:7%; top:8%; }
-.balloon-c{ left:9%; bottom:21%; }
-.balloon-d{ right:9%; bottom:23%; }
+.balloon-c{ left:9%; bottom:calc(21% - 10px); }
+.balloon-d{ right:9%; bottom:calc(23% - 10px); }
 .page2.active .balloon{
   animation:balloonEntrance .85s cubic-bezier(.34,1.56,.64,1) forwards;
   animation-delay:calc(2.05s + var(--entry-delay,0s));
@@ -166,23 +166,23 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
   letter-spacing:.32em; text-transform:uppercase; color:var(--gold-600); margin:0 0 .3em;
 }
 .headline-display{
-  font-family:'Playfair Display', serif; font-weight:700; font-style:italic;
-  font-size:clamp(30px,9vw,44px); line-height:1.1; margin:0; letter-spacing:.005em;
-  text-shadow:0 4px 14px rgba(240,71,156,.22);
-  background:linear-gradient(180deg,#ffffff 0%, var(--pink-600) 58%, var(--pink-700) 100%);
-  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;
+  font-family:var(--font-cartoon-display); font-weight:800; font-style:normal;
+  font-size:clamp(27px,8.2vw,37px); line-height:1.16; margin:0; letter-spacing:.01em;
+  color:var(--pink-600);
+  -webkit-text-stroke:2px #fff; paint-order:stroke fill;
+  text-shadow:0 5px 16px rgba(240,71,156,.28);
 }
 .name-display{ margin:.08em 0 .2em; }
 .name-accent{
-  font-family:'Pacifico', cursive; font-size:clamp(32px,10.5vw,50px); line-height:1;
+  font-family:'Dancing Script', cursive; font-weight:700; font-size:clamp(27px,8.6vw,40px); line-height:1.05;
   display:inline-block; cursor:pointer;
-  background:linear-gradient(120deg, var(--gold-300) 0%, var(--gold-600) 45%, var(--gold-300) 100%);
+  background:linear-gradient(120deg, var(--gold-600) 0%, var(--gold-300) 45%, var(--gold-600) 100%);
   background-size:220% 100%;
   -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;
   filter:drop-shadow(0 4px 12px rgba(201,138,58,.35));
 }
 .headline-script{
-  font-family:var(--font-body); font-style:italic; font-weight:500;
+  font-family:var(--font-cartoon-body); font-style:normal; font-weight:500;
   font-size:clamp(13.5px,3.8vw,15.5px); color:var(--ink-soft); opacity:.85; margin:0; letter-spacing:.01em;
 }
 .line-eyebrow,.line-greet,.line-name,.line-wish,.line-sweet{ opacity:0; }
