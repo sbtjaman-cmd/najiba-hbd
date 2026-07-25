@@ -16,7 +16,7 @@
   --peach-200:#ffe3cf; --butter-200:#fff2bf; --sky-200:#d7ecff; --blush-300:#ffcfe1;
   --ink:#6b2f4c; --white:#ffffff;
   --accent-1:#7fe3c4; --accent-2:#cbaeff;
-  --gold-200:#fbeecb; --gold-400:#e8c27a; --gold-600:#caa04d;
+  --gold-200:#fbeecb; --gold-400:#e8c27a; --gold-600:#caa04d; --rose-800:#8a2456;
   --font-display:'Luckiest Guy', cursive, sans-serif;
   --font-script:'Pacifico', cursive, sans-serif;
   --font-body:'Quicksand', sans-serif;
@@ -49,6 +49,10 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
   touch-action:pan-y;
 }
 @media (max-width:380px){ .stage{ border-radius:24px; } }
+.stage::after{
+  content:''; position:absolute; inset:0; z-index:3; pointer-events:none; border-radius:inherit;
+  background:radial-gradient(120% 105% at 50% 45%, transparent 62%, rgba(107,47,76,.09) 100%);
+}
 .viewport{ position:absolute; inset:0; overflow:hidden; border-radius:inherit; }
 .ambient-canvas{ position:absolute; inset:0; z-index:3; pointer-events:none; }
 
@@ -89,21 +93,22 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
 
 /* the "printed card" panel that gives the content its elevation */
 .card-frame{
-  position:absolute; inset:3% 4%; z-index:1; border-radius:30px;
-  background:linear-gradient(165deg, rgba(255,255,255,.6), rgba(255,255,255,.3));
-  border:1px solid rgba(255,255,255,.55);
+  position:absolute; inset:3% 4%; z-index:1; border-radius:28px;
+  background:linear-gradient(165deg, rgba(255,255,255,.62), rgba(255,255,255,.3));
+  border:1px solid rgba(232,194,122,.4);
   box-shadow:
-    0 24px 46px -22px rgba(214,49,138,.28),
-    0 10px 22px -12px rgba(214,49,138,.16),
-    inset 0 1px 0 rgba(255,255,255,.7),
-    inset 0 0 0 1px rgba(232,194,122,.16);
-  -webkit-backdrop-filter:blur(6px) saturate(115%);
-  backdrop-filter:blur(6px) saturate(115%);
+    0 26px 50px -22px rgba(138,36,86,.3),
+    0 10px 24px -12px rgba(138,36,86,.17),
+    inset 0 1px 0 rgba(255,255,255,.75),
+    inset 0 0 0 1px rgba(255,255,255,.5),
+    inset 0 0 0 6px rgba(232,194,122,.2);
+  -webkit-backdrop-filter:blur(7px) saturate(120%);
+  backdrop-filter:blur(7px) saturate(120%);
   pointer-events:none;
 }
 
 /* slow, barely-there light reflection sweeping across the card */
-.light-sweep{ position:absolute; inset:3% 4%; z-index:1; border-radius:30px; overflow:hidden; pointer-events:none; }
+.light-sweep{ position:absolute; inset:3% 4%; z-index:1; border-radius:28px; overflow:hidden; pointer-events:none; }
 .light-sweep::before{
   content:''; position:absolute; top:-25%; left:-60%; width:55%; height:150%;
   background:linear-gradient(100deg, transparent, rgba(255,255,255,.5) 45%, rgba(255,236,190,.32) 55%, transparent);
@@ -126,7 +131,7 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
   transform-origin:top center; animation:garlandSwing 7s ease-in-out infinite;
 }
 .fairy-garland svg{ display:block; width:100%; height:auto; }
-.fairy-garland .glow{ fill:var(--gold-400); opacity:.55; filter:blur(1.4px); animation:bulbTwinkle 2.6s ease-in-out infinite; transform-origin:center; }
+.fairy-garland .glow{ fill:url(#bulbGlow); opacity:.65; filter:blur(1.2px); animation:bulbTwinkle 2.6s ease-in-out infinite; transform-origin:center; }
 .fairy-garland .core{ fill:#fff8e6; }
 
 /* ===== PAGE 7 : CLOSING CARD ===== */
@@ -150,10 +155,12 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
 .page7.active .closing-line{ animation:headlineGlow 2.8s ease-in-out 1.4s infinite; }
 .closing-sub-line{ margin-top:.5em; }
 .headline-display{
-  font-family:var(--font-elegant); font-weight:700; letter-spacing:.3px; line-height:1.15;
-  font-size:clamp(30px,8.2vw,44px); color:var(--pink-700);
-  text-shadow:0 2px 0 rgba(255,255,255,.6), 0 10px 22px rgba(214,49,138,.22);
+  font-family:var(--font-elegant); font-weight:700; letter-spacing:.4px; line-height:1.15;
+  font-size:clamp(30px,8.2vw,44px); color:var(--rose-800);
+  text-shadow:0 2px 0 rgba(255,255,255,.65), 0 10px 24px rgba(138,36,86,.24);
 }
+.ornament-divider{ width:120px; max-width:38%; margin:.6em 0 0; }
+.ornament-divider svg{ display:block; width:100%; height:auto; }
 .headline-script{
   font-family:var(--font-script); font-weight:400; letter-spacing:.2px; line-height:1.6;
   font-size:clamp(14.5px,4vw,18px); color:var(--ink); opacity:.92;
@@ -208,6 +215,15 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
 .nav-arrow.next{ right:3%; }
 .nav-arrow:active{ transform:translateY(-50%) scale(.9); }
 
+@media (hover:hover) and (pointer:fine){
+  .cake-wrap:hover{ filter:drop-shadow(0 18px 26px rgba(214,49,138,.34)); }
+  .mic-hint:hover{ box-shadow:0 12px 22px -6px rgba(214,49,138,.3), inset 0 1px 0 rgba(255,255,255,.85); }
+  .replay-btn:hover{ box-shadow:0 14px 28px -8px rgba(214,49,138,.5), inset 0 1px 0 rgba(255,255,255,.4); }
+  .lantern-send:hover{ box-shadow:0 12px 22px -4px rgba(214,49,138,.5), inset 0 1px 0 rgba(255,255,255,.4); }
+  .control-buttons button:hover{ box-shadow:0 10px 18px -2px rgba(214,49,138,.32), inset 0 1px 0 rgba(255,255,255,.95); }
+  .nav-arrow:hover{ box-shadow:0 12px 22px -4px rgba(214,49,138,.34); }
+}
+
 /* keyframes */
 @keyframes flicker{ 0%,100%{ transform:scaleY(1) scaleX(1); } 50%{ transform:scaleY(1.12) scaleX(.9); } }
 @keyframes sprinkleTwinkle{ 0%,100%{ opacity:.7; transform:scale(1); } 50%{ opacity:1; transform:scale(1.25); } }
@@ -220,8 +236,8 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
 }
 @keyframes fadeInUp{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:translateY(0); } }
 @keyframes headlineGlow{
-  0%,100%{ text-shadow:0 2px 0 rgba(255,255,255,.6), 0 8px 18px rgba(214,49,138,.25); }
-  50%{ text-shadow:0 2px 0 rgba(255,255,255,.7), 0 10px 26px rgba(214,49,138,.4), 0 0 28px rgba(232,194,122,.45); }
+  0%,100%{ text-shadow:0 2px 0 rgba(255,255,255,.65), 0 8px 18px rgba(138,36,86,.28); }
+  50%{ text-shadow:0 2px 0 rgba(255,255,255,.75), 0 10px 28px rgba(138,36,86,.42), 0 0 30px rgba(232,194,122,.5); }
 }
 @keyframes lanternRise{
   0%{ transform:translate(-50%,0) scale(.7); opacity:0; }
@@ -251,7 +267,19 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
 <div class="stage" id="stage">
   <div class="fairy-garland" aria-hidden="true">
     <svg viewBox="0 0 400 56" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M0 8 Q100 50 200 8 Q300 50 400 8" fill="none" stroke="rgba(120,90,60,.4)" stroke-width="1.2"/>
+      <defs>
+        <radialGradient id="bulbGlow" cx="50%" cy="45%" r="60%">
+          <stop offset="0%" stop-color="#fff6da"/>
+          <stop offset="55%" stop-color="#e8c27a"/>
+          <stop offset="100%" stop-color="#caa04d" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="wireGold" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#b98f52"/>
+          <stop offset="50%" stop-color="#8a6a3e"/>
+          <stop offset="100%" stop-color="#b98f52"/>
+        </linearGradient>
+      </defs>
+      <path d="M0 8 Q100 50 200 8 Q300 50 400 8" fill="none" stroke="url(#wireGold)" stroke-width="1.2" opacity=".55"/>
       <g class="bulb"><circle class="glow" cx="40" cy="21" r="7" style="animation-delay:0s"/><circle class="core" cx="40" cy="21" r="2.6"/></g>
       <g class="bulb"><circle class="glow" cx="80" cy="28" r="7" style="animation-delay:.3s"/><circle class="core" cx="80" cy="28" r="2.6"/></g>
       <g class="bulb"><circle class="glow" cx="100" cy="29" r="7" style="animation-delay:.6s"/><circle class="core" cx="100" cy="29" r="2.6"/></g>
@@ -279,66 +307,80 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
       <div class="lantern-archive" id="lanternArchive" aria-hidden="true"></div>
       <div class="floral-corner tl" aria-hidden="true">
         <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="18" cy="22" rx="22" ry="16" fill="#ffa9d4" opacity=".32" transform="rotate(-18 18 22)"/>
-          <ellipse cx="34" cy="12" rx="16" ry="12" fill="#cbaeff" opacity=".28" transform="rotate(12 34 12)"/>
-          <ellipse cx="10" cy="40" rx="14" ry="20" fill="#7fe3c4" opacity=".26" transform="rotate(-30 10 40)"/>
-          <ellipse cx="44" cy="34" rx="12" ry="9" fill="#ffe3cf" opacity=".36" transform="rotate(20 44 34)"/>
-          <path d="M4 4 Q30 18 42 46" fill="none" stroke="#2f9c7c" stroke-width="1.1" opacity=".3"/>
-          <path d="M8 30 Q6 14 20 6" fill="none" stroke="#2f9c7c" stroke-width="1" opacity=".26"/>
-          <ellipse cx="26" cy="30" rx="7" ry="3" fill="#2f9c7c" opacity=".26" transform="rotate(35 26 30)"/>
-          <ellipse cx="16" cy="16" rx="6" ry="2.6" fill="#2f9c7c" opacity=".24" transform="rotate(-25 16 16)"/>
-          <circle cx="30" cy="20" r="2" fill="#e8c27a" opacity=".55"/>
-          <circle cx="14" cy="34" r="1.6" fill="#e8c27a" opacity=".5"/>
+          <ellipse cx="18" cy="22" rx="22" ry="16" fill="#ffb3d9" opacity=".34" transform="rotate(-18 18 22)"/>
+          <ellipse cx="34" cy="12" rx="16" ry="12" fill="#e7b8c9" opacity=".3" transform="rotate(12 34 12)"/>
+          <ellipse cx="10" cy="40" rx="14" ry="20" fill="#9db99f" opacity=".24" transform="rotate(-30 10 40)"/>
+          <ellipse cx="44" cy="34" rx="12" ry="9" fill="#f6dcc4" opacity=".38" transform="rotate(20 44 34)"/>
+          <ellipse cx="24" cy="24" rx="9" ry="7" fill="#c9557e" opacity=".2" transform="rotate(-8 24 24)"/>
+          <path d="M4 4 Q30 18 42 46" fill="none" stroke="#6b8f74" stroke-width="1.1" opacity=".32"/>
+          <path d="M8 30 Q6 14 20 6" fill="none" stroke="#6b8f74" stroke-width="1" opacity=".28"/>
+          <ellipse cx="26" cy="30" rx="7" ry="3" fill="#6b8f74" opacity=".28" transform="rotate(35 26 30)"/>
+          <ellipse cx="16" cy="16" rx="6" ry="2.6" fill="#6b8f74" opacity=".26" transform="rotate(-25 16 16)"/>
+          <circle cx="30" cy="20" r="2" fill="#caa04d" opacity=".6"/>
+          <circle cx="14" cy="34" r="1.6" fill="#caa04d" opacity=".55"/>
         </svg>
       </div>
       <div class="floral-corner tr" aria-hidden="true">
         <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="18" cy="22" rx="22" ry="16" fill="#ffa9d4" opacity=".32" transform="rotate(-18 18 22)"/>
-          <ellipse cx="34" cy="12" rx="16" ry="12" fill="#cbaeff" opacity=".28" transform="rotate(12 34 12)"/>
-          <ellipse cx="10" cy="40" rx="14" ry="20" fill="#7fe3c4" opacity=".26" transform="rotate(-30 10 40)"/>
-          <ellipse cx="44" cy="34" rx="12" ry="9" fill="#ffe3cf" opacity=".36" transform="rotate(20 44 34)"/>
-          <path d="M4 4 Q30 18 42 46" fill="none" stroke="#2f9c7c" stroke-width="1.1" opacity=".3"/>
-          <path d="M8 30 Q6 14 20 6" fill="none" stroke="#2f9c7c" stroke-width="1" opacity=".26"/>
-          <ellipse cx="26" cy="30" rx="7" ry="3" fill="#2f9c7c" opacity=".26" transform="rotate(35 26 30)"/>
-          <ellipse cx="16" cy="16" rx="6" ry="2.6" fill="#2f9c7c" opacity=".24" transform="rotate(-25 16 16)"/>
-          <circle cx="30" cy="20" r="2" fill="#e8c27a" opacity=".55"/>
-          <circle cx="14" cy="34" r="1.6" fill="#e8c27a" opacity=".5"/>
+          <ellipse cx="18" cy="22" rx="22" ry="16" fill="#ffb3d9" opacity=".34" transform="rotate(-18 18 22)"/>
+          <ellipse cx="34" cy="12" rx="16" ry="12" fill="#e7b8c9" opacity=".3" transform="rotate(12 34 12)"/>
+          <ellipse cx="10" cy="40" rx="14" ry="20" fill="#9db99f" opacity=".24" transform="rotate(-30 10 40)"/>
+          <ellipse cx="44" cy="34" rx="12" ry="9" fill="#f6dcc4" opacity=".38" transform="rotate(20 44 34)"/>
+          <ellipse cx="24" cy="24" rx="9" ry="7" fill="#c9557e" opacity=".2" transform="rotate(-8 24 24)"/>
+          <path d="M4 4 Q30 18 42 46" fill="none" stroke="#6b8f74" stroke-width="1.1" opacity=".32"/>
+          <path d="M8 30 Q6 14 20 6" fill="none" stroke="#6b8f74" stroke-width="1" opacity=".28"/>
+          <ellipse cx="26" cy="30" rx="7" ry="3" fill="#6b8f74" opacity=".28" transform="rotate(35 26 30)"/>
+          <ellipse cx="16" cy="16" rx="6" ry="2.6" fill="#6b8f74" opacity=".26" transform="rotate(-25 16 16)"/>
+          <circle cx="30" cy="20" r="2" fill="#caa04d" opacity=".6"/>
+          <circle cx="14" cy="34" r="1.6" fill="#caa04d" opacity=".55"/>
         </svg>
       </div>
       <div class="floral-corner bl" aria-hidden="true">
         <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="18" cy="22" rx="22" ry="16" fill="#ffa9d4" opacity=".32" transform="rotate(-18 18 22)"/>
-          <ellipse cx="34" cy="12" rx="16" ry="12" fill="#cbaeff" opacity=".28" transform="rotate(12 34 12)"/>
-          <ellipse cx="10" cy="40" rx="14" ry="20" fill="#7fe3c4" opacity=".26" transform="rotate(-30 10 40)"/>
-          <ellipse cx="44" cy="34" rx="12" ry="9" fill="#ffe3cf" opacity=".36" transform="rotate(20 44 34)"/>
-          <path d="M4 4 Q30 18 42 46" fill="none" stroke="#2f9c7c" stroke-width="1.1" opacity=".3"/>
-          <path d="M8 30 Q6 14 20 6" fill="none" stroke="#2f9c7c" stroke-width="1" opacity=".26"/>
-          <ellipse cx="26" cy="30" rx="7" ry="3" fill="#2f9c7c" opacity=".26" transform="rotate(35 26 30)"/>
-          <ellipse cx="16" cy="16" rx="6" ry="2.6" fill="#2f9c7c" opacity=".24" transform="rotate(-25 16 16)"/>
-          <circle cx="30" cy="20" r="2" fill="#e8c27a" opacity=".55"/>
-          <circle cx="14" cy="34" r="1.6" fill="#e8c27a" opacity=".5"/>
+          <ellipse cx="18" cy="22" rx="22" ry="16" fill="#ffb3d9" opacity=".34" transform="rotate(-18 18 22)"/>
+          <ellipse cx="34" cy="12" rx="16" ry="12" fill="#e7b8c9" opacity=".3" transform="rotate(12 34 12)"/>
+          <ellipse cx="10" cy="40" rx="14" ry="20" fill="#9db99f" opacity=".24" transform="rotate(-30 10 40)"/>
+          <ellipse cx="44" cy="34" rx="12" ry="9" fill="#f6dcc4" opacity=".38" transform="rotate(20 44 34)"/>
+          <ellipse cx="24" cy="24" rx="9" ry="7" fill="#c9557e" opacity=".2" transform="rotate(-8 24 24)"/>
+          <path d="M4 4 Q30 18 42 46" fill="none" stroke="#6b8f74" stroke-width="1.1" opacity=".32"/>
+          <path d="M8 30 Q6 14 20 6" fill="none" stroke="#6b8f74" stroke-width="1" opacity=".28"/>
+          <ellipse cx="26" cy="30" rx="7" ry="3" fill="#6b8f74" opacity=".28" transform="rotate(35 26 30)"/>
+          <ellipse cx="16" cy="16" rx="6" ry="2.6" fill="#6b8f74" opacity=".26" transform="rotate(-25 16 16)"/>
+          <circle cx="30" cy="20" r="2" fill="#caa04d" opacity=".6"/>
+          <circle cx="14" cy="34" r="1.6" fill="#caa04d" opacity=".55"/>
         </svg>
       </div>
       <div class="floral-corner br" aria-hidden="true">
         <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="18" cy="22" rx="22" ry="16" fill="#ffa9d4" opacity=".32" transform="rotate(-18 18 22)"/>
-          <ellipse cx="34" cy="12" rx="16" ry="12" fill="#cbaeff" opacity=".28" transform="rotate(12 34 12)"/>
-          <ellipse cx="10" cy="40" rx="14" ry="20" fill="#7fe3c4" opacity=".26" transform="rotate(-30 10 40)"/>
-          <ellipse cx="44" cy="34" rx="12" ry="9" fill="#ffe3cf" opacity=".36" transform="rotate(20 44 34)"/>
-          <path d="M4 4 Q30 18 42 46" fill="none" stroke="#2f9c7c" stroke-width="1.1" opacity=".3"/>
-          <path d="M8 30 Q6 14 20 6" fill="none" stroke="#2f9c7c" stroke-width="1" opacity=".26"/>
-          <ellipse cx="26" cy="30" rx="7" ry="3" fill="#2f9c7c" opacity=".26" transform="rotate(35 26 30)"/>
-          <ellipse cx="16" cy="16" rx="6" ry="2.6" fill="#2f9c7c" opacity=".24" transform="rotate(-25 16 16)"/>
-          <circle cx="30" cy="20" r="2" fill="#e8c27a" opacity=".55"/>
-          <circle cx="14" cy="34" r="1.6" fill="#e8c27a" opacity=".5"/>
+          <ellipse cx="18" cy="22" rx="22" ry="16" fill="#ffb3d9" opacity=".34" transform="rotate(-18 18 22)"/>
+          <ellipse cx="34" cy="12" rx="16" ry="12" fill="#e7b8c9" opacity=".3" transform="rotate(12 34 12)"/>
+          <ellipse cx="10" cy="40" rx="14" ry="20" fill="#9db99f" opacity=".24" transform="rotate(-30 10 40)"/>
+          <ellipse cx="44" cy="34" rx="12" ry="9" fill="#f6dcc4" opacity=".38" transform="rotate(20 44 34)"/>
+          <ellipse cx="24" cy="24" rx="9" ry="7" fill="#c9557e" opacity=".2" transform="rotate(-8 24 24)"/>
+          <path d="M4 4 Q30 18 42 46" fill="none" stroke="#6b8f74" stroke-width="1.1" opacity=".32"/>
+          <path d="M8 30 Q6 14 20 6" fill="none" stroke="#6b8f74" stroke-width="1" opacity=".28"/>
+          <ellipse cx="26" cy="30" rx="7" ry="3" fill="#6b8f74" opacity=".28" transform="rotate(35 26 30)"/>
+          <ellipse cx="16" cy="16" rx="6" ry="2.6" fill="#6b8f74" opacity=".26" transform="rotate(-25 16 16)"/>
+          <circle cx="30" cy="20" r="2" fill="#caa04d" opacity=".6"/>
+          <circle cx="14" cy="34" r="1.6" fill="#caa04d" opacity=".55"/>
         </svg>
       </div>
 
       <div class="cake-wrap content" id="cakeWrap" role="button" tabindex="0" aria-label="Tap to blow out the candle and make a wish">
         <svg viewBox="0 0 200 170">
+          <defs>
+            <linearGradient id="cakeBottom" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ffc0e0"/>
+              <stop offset="100%" stop-color="#ff9fce"/>
+            </linearGradient>
+            <linearGradient id="cakeTop" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ffa3d0"/>
+              <stop offset="100%" stop-color="#ff7fbe"/>
+            </linearGradient>
+          </defs>
           <ellipse cx="100" cy="152" rx="76" ry="10" fill="#ffd0e6"/>
-          <rect x="35" y="112" width="130" height="36" rx="10" style="fill:var(--pink-300)"/>
-          <rect x="55" y="82" width="90" height="34" rx="10" style="fill:var(--pink-400)"/>
+          <rect x="35" y="112" width="130" height="36" rx="10" fill="url(#cakeBottom)"/>
+          <rect x="55" y="82" width="90" height="34" rx="10" fill="url(#cakeTop)"/>
           <rect x="45" y="124" width="8" height="8" rx="2" style="fill:#fff2bf; animation:sprinkleTwinkle 1.8s ease-in-out .05s infinite"/>
           <rect x="70" y="130" width="8" height="8" rx="2" style="fill:#aef0dc; animation:sprinkleTwinkle 1.8s ease-in-out .3s infinite"/>
           <rect x="95" y="122" width="8" height="8" rx="2" style="fill:#cbaeff; animation:sprinkleTwinkle 1.8s ease-in-out .55s infinite"/>
@@ -355,6 +397,20 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
       <p class="wish-msg" id="wishMsg">Make a wish! ✨</p>
 
       <p class="headline-display closing-line content">Happy Birthday!</p>
+      <div class="ornament-divider content" aria-hidden="true">
+        <svg viewBox="0 0 120 16" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="goldLine" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#e8c27a" stop-opacity="0"/>
+              <stop offset="50%" stop-color="#caa04d" stop-opacity=".85"/>
+              <stop offset="100%" stop-color="#e8c27a" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <line x1="0" y1="8" x2="48" y2="8" stroke="url(#goldLine)" stroke-width="1"/>
+          <path d="M60 3 L65 8 L60 13 L55 8 Z" fill="#caa04d" opacity=".85"/>
+          <line x1="72" y1="8" x2="120" y2="8" stroke="url(#goldLine)" stroke-width="1"/>
+        </svg>
+      </div>
       <p class="headline-script closing-sub-line content"><span id="nameSlot">Friend</span>, thinking of you today, and every day ✨</p>
 
       <button type="button" class="mic-hint content" id="micHintBtn">🎤 or blow into your mic</button>
