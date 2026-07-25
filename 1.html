@@ -107,14 +107,16 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
 .frame-media img{ width:100%; height:100%; object-fit:cover; display:block; cursor:zoom-in; -webkit-user-drag:none; animation:photoBreathe 7s ease-in-out infinite; animation-delay:var(--bd,0s); transform-origin:center; }
 .frame-tag{ position:absolute; left:50%; bottom:3.2%; transform:translateX(-50%); font-family:var(--font-script); font-size:clamp(8px,2.3vw,10.5px); color:var(--pink-600); white-space:nowrap; pointer-events:none; letter-spacing:.02em; z-index:2; }
 /* scrapbook mats: the tag is normal-flow content stacked BELOW the photo (not an absolute overlay),
-   so it can never sit on top of the image regardless of text length or font size. Plain text, no chip. */
+   so it can never sit on top of the image. white-space:normal (not nowrap) so a longer name wraps
+   instead of forcing its grid column wider than its track — that track-blowout was pushing the
+   3rd photo in each row past the card edge. */
 .photo-mat .frame-tag{
   position:static; transform:none; margin:0;
-  font-size:clamp(9px,2.6vw,11px); white-space:nowrap; line-height:1.25;
+  font-size:clamp(9px,2.6vw,11px); white-space:normal; line-height:1.25; max-width:100%;
   color:var(--pink-700);
 }
 .collage-caption{
-  margin-top:4vw; font-family:var(--font-script); font-size:clamp(13px,3.8vw,16px); color:var(--pink-700);
+  margin-top:7vw; font-family:var(--font-script); font-size:clamp(13px,3.8vw,16px); color:var(--pink-700);
   max-width:88%; text-align:center; line-height:1.35;
   opacity:0;
 }
@@ -171,7 +173,7 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
    .torn-mat via filter:drop-shadow, which (unlike box-shadow) follows the torn clip-path
    silhouette instead of casting a rectangular shadow behind a jagged card. Flex column stacks
    the photo then the tag in normal document flow, so the tag can never sit on top of the photo. */
-.photo-mat{ position:relative; background:linear-gradient(165deg,#ffffff,#fff9fb 55%,#fdf1f6); opacity:0; display:flex; flex-direction:column; align-items:center; gap:1.1vw; }
+.photo-mat{ position:relative; background:linear-gradient(165deg,#ffffff,#fff9fb 55%,#fdf1f6); opacity:0; display:flex; flex-direction:column; align-items:center; gap:1.1vw; min-width:0; }
 .page1.active .photo-mat{ animation:matPopIn .65s cubic-bezier(.34,1.56,.64,1) forwards; }
 .page1.active .hero-mat{ animation-delay:.2s; }
 .page1.active .scrap-support-grid .photo-mat{ animation-delay:calc(var(--i,0) * .22s + .5s); }
@@ -214,11 +216,15 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
 .photo-slot{ width:100%; height:100%; aspect-ratio:1/1; border-radius:6px; overflow:hidden; display:block; background:var(--pink-50); box-shadow:inset 0 0 0 1px rgba(107,47,76,.09); }
 .photo-slot img{ width:100%; height:100%; object-fit:cover; display:block; cursor:zoom-in; -webkit-user-drag:none; animation:photoBreathe 7s ease-in-out infinite; animation-delay:var(--bd,0s); transform-origin:center; }
 
-/* supporting grid */
-.scrap-support-grid{ position:relative; z-index:2; display:grid; grid-template-columns:repeat(3,1fr); gap:3.4vw; width:100%; max-width:336px; margin:0 auto; }
+/* supporting grid — minmax(0,1fr), not bare 1fr: a plain 1fr track has an invisible default
+   minimum equal to its content's natural (unshrinkable) width, which is exactly what let a long
+   nowrap tag push a column past the card edge. minmax(0,1fr) removes that floor. */
+.scrap-support-grid{ position:relative; z-index:2; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:3.4vw; width:100%; max-width:336px; margin:0 auto; }
 
-/* hanging wire above each row of 3 supporting photos, echoing the garland's wire+bulb motif */
-.hang-wire-row{ grid-column:1/-1; width:100%; height:30px; position:relative; pointer-events:none; opacity:0; }
+/* hanging wire above each row of 3 supporting photos, echoing the garland's wire+bulb motif.
+   negative margin-bottom pulls the row beneath it up so the pegs visibly meet the photos
+   instead of floating in the middle of the grid gap. */
+.hang-wire-row{ grid-column:1/-1; width:100%; height:30px; margin-bottom:-11px; position:relative; pointer-events:none; opacity:0; }
 .hang-wire-row svg{ width:100%; height:100%; display:block; overflow:visible; }
 .page1.active .hang-wire-row{ animation:hangWireIn .6s cubic-bezier(.34,1.56,.64,1) forwards; animation-delay:calc(var(--wi,0) * .9s + .35s); }
 @keyframes hangWireIn{ 0%{ opacity:0; transform:translateY(-6px); } 100%{ opacity:1; transform:translateY(0); } }
@@ -360,15 +366,6 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
   </button>
 
   <div class="controls">
-    <div class="dots" id="dots">
-      <a href="1.html" class="dot active" aria-label="Page 1"></a>
-      <a href="2.html" class="dot" aria-label="Page 2"></a>
-      <a href="3.html" class="dot" aria-label="Page 3"></a>
-      <a href="4.html" class="dot" aria-label="Page 4"></a>
-      <a href="5.html" class="dot" aria-label="Page 5"></a>
-      <a href="6.html" class="dot" aria-label="Page 6"></a>
-      <a href="7.html" class="dot" aria-label="Page 7"></a>
-    </div>
     <div class="control-buttons">
       <button type="button" id="muteBtn" aria-label="Mute or unmute music">🔊</button>
     </div>
@@ -752,10 +749,10 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
       ring.setAttribute('cy','-1'); ring.setAttribute('r','1.7');
       ring.setAttribute('fill','none'); ring.setAttribute('stroke','rgba(107,47,76,.4)'); ring.setAttribute('stroke-width','1');
       var body = document.createElementNS(svgNS,'rect');
-      body.setAttribute('x','-3.3'); body.setAttribute('y','0'); body.setAttribute('width','6.6'); body.setAttribute('height','15');
+      body.setAttribute('x','-3.3'); body.setAttribute('y','0'); body.setAttribute('width','6.6'); body.setAttribute('height','18');
       body.setAttribute('rx','2.1'); body.setAttribute('fill', pegFills[(rowIndex+i) % pegFills.length]);
       var seam = document.createElementNS(svgNS,'line');
-      seam.setAttribute('x1','-3.3'); seam.setAttribute('y1','7.4'); seam.setAttribute('x2','3.3'); seam.setAttribute('y2','7.4');
+      seam.setAttribute('x1','-3.3'); seam.setAttribute('y1','8.9'); seam.setAttribute('x2','3.3'); seam.setAttribute('y2','8.9');
       seam.setAttribute('stroke','rgba(107,47,76,.28)'); seam.setAttribute('stroke-width','.8');
       g.appendChild(ring); g.appendChild(body); g.appendChild(seam);
       svg.appendChild(g);
