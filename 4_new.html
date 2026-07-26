@@ -550,10 +550,10 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
   /* ---- navigation ---- */
   function goTo(url){ window.location.href = url; }
   document.getElementById('prevBtn').addEventListener('click', function(){ goTo('3.html'); });
-  document.getElementById('nextBtn').addEventListener('click', function(){ goTo('4_new.html'); });
+  document.getElementById('nextBtn').addEventListener('click', function(){ goTo('4.html'); });
   document.addEventListener('keydown', function(e){
     if(e.key === 'ArrowLeft') goTo('3.html');
-    if(e.key === 'ArrowRight') goTo('4_new.html');
+    if(e.key === 'ArrowRight') goTo('4.html');
   });
 
   /* swipe navigation */
@@ -570,7 +570,7 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
     var dx = e.changedTouches[0].clientX - touchStartX;
     var dy = e.changedTouches[0].clientY - touchStartY;
     if(Math.abs(dx) > 46 && Math.abs(dx) > Math.abs(dy) * 1.4){
-      if(dx < 0) goTo('4_new.html'); else goTo('3.html');
+      if(dx < 0) goTo('4.html'); else goTo('3.html');
     }
   }, { passive:true });
 
