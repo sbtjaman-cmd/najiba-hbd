@@ -845,16 +845,24 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
     if(fallbackBound) return;
     fallbackBound = true;
     function onFirstInteract(){
-      document.removeEventListener('pointerdown', onFirstInteract);
-      document.removeEventListener('keydown', onFirstInteract);
-      document.removeEventListener('touchstart', onFirstInteract);
+      document.removeEventListener('pointerdown', onFirstInteract, true);
+      document.removeEventListener('keydown', onFirstInteract, true);
+      document.removeEventListener('touchstart', onFirstInteract, true);
+      document.removeEventListener('mousedown', onFirstInteract, true);
+      document.removeEventListener('click', onFirstInteract, true);
       if(bgMusic.paused){
         bgMusic.play().then(function(){ setUI(true); }).catch(function(){ /* stays paused, button still shows tap state */ });
       }
     }
-    document.addEventListener('pointerdown', onFirstInteract, { once:true, passive:true });
-    document.addEventListener('touchstart', onFirstInteract, { once:true, passive:true });
-    document.addEventListener('keydown', onFirstInteract, { once:true });
+    /* listen in the CAPTURE phase so we catch the very first gesture
+       anywhere on the page (including taps on the Yes/No buttons)
+       before anything else has a chance to stop it, and cover every
+       gesture type different browsers recognise as "activation" */
+    document.addEventListener('pointerdown', onFirstInteract, { capture:true, passive:true });
+    document.addEventListener('touchstart', onFirstInteract, { capture:true, passive:true });
+    document.addEventListener('mousedown', onFirstInteract, { capture:true, passive:true });
+    document.addEventListener('click', onFirstInteract, { capture:true, passive:true });
+    document.addEventListener('keydown', onFirstInteract, { capture:true });
   }
 
   function tryAutoplay(){
@@ -863,7 +871,8 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
       playPromise.then(function(){
         setUI(true);
       }).catch(function(){
-        /* autoplay blocked by the browser — invite a tap */
+        /* autoplay blocked by the browser — invite a tap, and also
+           silently retry on the very first interaction anywhere */
         setUI(false);
         armFirstInteractionFallback();
       });
@@ -884,12 +893,22 @@ button:focus-visible{ outline:3px solid var(--pink-600); outline-offset:2px; }
   bgMusic.addEventListener('playing', function(){ setUI(true); });
   bgMusic.addEventListener('pause', function(){ setUI(false); });
 
-  /* attempt immediately, and also once more once the page has fully loaded
-     (some browsers evaluate the autoplay policy slightly differently at
-     each point, so trying twice improves the odds of a silent start) */
+  /* attempt as early as possible, then again once the page has fully
+     loaded (some browsers evaluate the autoplay policy slightly
+     differently at each point, so trying more than once improves the
+     odds of a silent start) */
   tryAutoplay();
-  window.addEventListener('load', function(){
-    if(bgMusic.paused) tryAutoplay();
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){ if(bgMusic.paused) tryAutoplay(); });
+  }
+  window.addEventListener('load', function(){ if(bgMusic.paused) tryAutoplay(); });
+
+  /* iOS/Safari can silently pause media when a page is restored from
+     the back-forward cache (bfcache) — re-attempt whenever the page
+     becomes visible/restored again */
+  window.addEventListener('pageshow', function(){ if(bgMusic.paused) tryAutoplay(); });
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'visible' && bgMusic.paused) tryAutoplay();
   });
 })();
 </script>
