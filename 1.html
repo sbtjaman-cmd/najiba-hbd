@@ -471,7 +471,12 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
 
   <div class="controls">
     <div class="control-buttons">
-      <button type="button" id="muteBtn" aria-label="Mute or unmute music" aria-pressed="true">
+      <button type="button" id="muteBtn" aria-label="Mute or unmute music" style="display: none;"></button>
+        <svg id="muteIconOn" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9 18V6.6c0-.5.34-.93.83-1.04l9-2C19.46 3.4 20 3.83 20 4.42V16" stroke="var(--rose-700)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="7" cy="18" r="2.4" fill="var(--rose-700)"/>
+          <circle cx="18" cy="16" r="2.4" fill="var(--rose-700)"/>
+        </svg>
         <svg id="muteIconOff" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="display:none">
           <path d="M9 18V6.6c0-.5.34-.93.83-1.04l9-2C19.46 3.4 20 3.83 20 4.42V16" stroke="var(--rose-500)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" opacity=".5"/>
           <circle cx="7" cy="18" r="2.4" fill="var(--rose-500)" opacity=".5"/>
@@ -503,9 +508,12 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
       "images/4.jpeg",
       "images/5.jpeg",
       "images/6.jpeg",
-      "images/7.jpeg"
+      "images/7.jpeg",
+      "images/8.jpeg",
+      "images/9.jpeg",
+      "images/10.jpeg"
     ],
-    collageTags: ["Rose 🌹", "Lily 🌸", "Daisy 🌼", "Tulip 🌷", "Jasmine 🌿", "Lotus 🪷", "Sunflower 🌻"]
+    collageTags: ["Rose 🌹", "Lily 🌸", "Daisy 🌼", "Tulip 🌷", "Jasmine 🌿", "Lotus 🪷", "Sunflower 🌻", "Orchid 🌺", "Camellia 🏵️", "Peony 💮"]
   };
 
   /* ---- utils ---- */
