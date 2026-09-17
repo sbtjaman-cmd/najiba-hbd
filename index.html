@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>For You 💫</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ivory:#fffdf8;
+  --cream-50:#fbf3e7;
+  --cream-100:#f6ead9;
+  --blush-100:#f7e3e2;
+  --blush-200:#efd1d3;
+  --rose-900:#3f1826;
+  --rose-800:#5c2438;
+  --rose-700:#7a2f47;
+  --rose-600:#93395a;
+  --rose-500:#a9506e;
+  --rose-300:#cf93a5;
+  --rose-100:#f0dbe0;
+  --gold-200:#f2e3bd;
+  --gold-300:#e6cb8f;
+  --gold-500:#c9a05c;
+  --gold-600:#b3894a;
+  --gold-700:#8f6c37;
+  --ink:var(--rose-800);
+  --font-body:'Quicksand', sans-serif;
+  --font-elegant:'Playfair Display', serif;
+  --ease-soft:cubic-bezier(.22,.61,.36,1);
+  /* every inner size is derived from the card's own width, so the whole
+     layout keeps its proportions on any screen instead of overflowing */
+  --card-w:min(420px, calc(100vw - 36px), calc((100vh - 36px)/1.4));
+  --card-w:min(420px, calc(100vw - 36px), calc((100svh - 36px)/1.4));
+  --ease-spring:cubic-bezier(.3,1.2,.4,1);
+}
+*,*::before,*::after{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body{ margin:0; padding:0; }
+body{
+  min-height:100vh; min-height:100dvh;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(160deg, var(--ivory), var(--cream-50) 38%, var(--blush-100) 68%, var(--cream-100));
+  background-size:180% 180%;
+  animation:driftGradient 32s ease-in-out infinite;
+  font-family:var(--font-body); font-weight:500; color:var(--ink);
+  padding:18px; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+button{ font-family:inherit; touch-action:manipulation; }
+button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
+
+/* ===== CARD ===== */
+.start-overlay{
+  position:relative; width:var(--card-w); max-width:100%; aspect-ratio:5/7;
+  display:flex; align-items:center; justify-content:center;
+  padding:calc(var(--card-w)*.07) calc(var(--card-w)*.075) calc(var(--card-w)*.135);
+  text-align:center;
+  border-radius:26px;
+  overflow:hidden;
+  background:linear-gradient(165deg, var(--ivory), var(--cream-50) 42%, var(--blush-100) 78%, var(--cream-100));
+  background-size:180% 180%;
+  animation:cardIn 1s var(--ease-soft) both, driftGradient 32s ease-in-out infinite;
+  box-shadow:0 30px 70px -22px rgba(63,24,38,.38), 0 10px 26px -12px rgba(122,47,71,.16), inset 0 0 0 1px rgba(255,255,255,.6);
+  border:1px solid rgba(201,160,92,.4);
+}
+.start-overlay.is-leaving{ animation:cardOut .62s var(--ease-soft) both; }
+.start-frame{
+  position:absolute; inset:calc(var(--card-w)*0.02619); z-index:5; pointer-events:none; border-radius:calc(var(--card-w)*0.04048);
+  border:1px solid rgba(201,160,92,.38);
+  opacity:0; animation:fadeIn .8s var(--ease-soft) .2s both;
+}
+.start-canvas{ position:absolute; inset:0; z-index:0; pointer-events:none; }
+.start-overlay::before{
+  content:''; position:absolute; z-index:0; pointer-events:none; inset:0; border-radius:inherit;
+  background:radial-gradient(55% 40% at 50% 8%, rgba(255,250,238,.55), transparent 72%);
+}
+.start-overlay::after{
+  content:''; position:absolute; inset:0; z-index:3; pointer-events:none; border-radius:inherit;
+  background:radial-gradient(120% 105% at 50% 42%, transparent 60%, rgba(63,24,38,.08) 100%);
+}
+.start-grain{ position:absolute; inset:0; z-index:4; pointer-events:none; opacity:.025; mix-blend-mode:overlay; }
+.start-grain svg{ width:100%; height:100%; display:block; }
+
+/* a single, one-time sheen that travels across the card as it opens */
+.start-shine{ position:absolute; inset:0; z-index:6; pointer-events:none; border-radius:inherit; overflow:hidden; }
+.start-shine::before{
+  content:''; position:absolute; top:-35%; bottom:-35%; left:-55%; width:42%;
+  background:linear-gradient(95deg, transparent, rgba(255,255,255,.62), transparent);
+  animation:cardShine 1.9s var(--ease-soft) .8s both;
+}
+
+/* fine gold garland across the top — static, one soft breathing glow, no per-bulb blinking */
+.start-garland{ position:absolute; top:0; left:0; right:0; height:calc(var(--card-w)*0.08095); z-index:2; pointer-events:none; overflow:visible; opacity:.85; animation:garlandDrop 1s var(--ease-soft) .2s both, garlandBreathe 6s ease-in-out 1.2s infinite; }
+.start-garland svg{ width:100%; height:100%; display:block; overflow:visible; }
+
+/* delicate laurel motif at the base, gold line-art */
+.start-laurel{ position:absolute; left:0; right:0; bottom:0; height:11%; min-height:38px; max-height:58px; z-index:0; pointer-events:none; opacity:.75; animation:laurelRise 1.2s var(--ease-soft) .5s both; }
+.start-laurel svg{ width:100%; height:100%; display:block; }
+
+.start-content{ position:relative; z-index:1; width:100%; }
+
+.start-top-mark{ margin:0 0 calc(var(--card-w)*0.01667); opacity:0; animation:fadeIn .6s var(--ease-soft) .05s both; }
+.start-top-mark svg{ width:calc(var(--card-w)*0.05238); height:calc(var(--card-w)*0.05238); display:inline-block; transform-origin:center; animation:markTwinkle 6s ease-in-out 1.4s infinite; }
+
+.start-title{
+  font-family:var(--font-elegant); font-weight:700; font-style:italic; font-size:calc(var(--card-w)*0.05714);
+  color:var(--rose-800);
+  letter-spacing:.2px; margin:0 0 calc(var(--card-w)*0.01905); line-height:1.3;
+  text-shadow:0 4px 14px rgba(63,24,38,.1);
+  opacity:0;
+  animation:fadeUp .7s var(--ease-soft) .15s both;
+}
+
+/* elegant date line */
+.start-divider{ width:calc(var(--card-w)*0.26667); max-width:40%; margin:0 auto calc(var(--card-w)*0.01905); opacity:0; transform-origin:center; animation:drawRule .9s var(--ease-soft) .3s both; }
+.start-divider svg{ display:block; width:100%; height:auto; }
+.start-date-line{
+  margin:0 0 calc(var(--card-w)*0.03095); display:flex; align-items:baseline; justify-content:center; gap:calc(var(--card-w)*0.02381);
+  opacity:0; animation:fadeUp .6s var(--ease-soft) .36s both;
+}
+.start-date-day{ font-family:var(--font-elegant); font-weight:700; font-size:calc(var(--card-w)*0.05476); color:var(--rose-800); line-height:1; }
+.start-date-sep{ width:calc(var(--card-w)*0.0119); height:calc(var(--card-w)*0.0119); border-radius:50%; background:var(--gold-500); opacity:.8; transform:translateY(-3px); }
+.start-date-month{ font-family:var(--font-body); font-weight:600; font-size:calc(var(--card-w)*0.0281); letter-spacing:.24em; text-transform:uppercase; color:var(--rose-700); opacity:.8; }
+
+/* ===== panel: calendar + cta ===== */
+.start-panel{
+  position:relative;
+  max-width:calc(var(--card-w)*0.58571); box-sizing:border-box; margin:0 auto;
+  display:flex; flex-direction:column; align-items:center; gap:calc(var(--card-w)*0.02619);
+  opacity:0;
+  animation:fadeUp .7s var(--ease-soft) .44s both;
+}
+
+.calendar-card{
+  position:relative; width:100%; overflow:hidden;
+  padding:calc(var(--card-w)*0.03333) calc(var(--card-w)*0.03095) calc(var(--card-w)*0.02857);
+  background:linear-gradient(170deg, rgba(255,253,248,.78), rgba(246,234,217,.55));
+  border:1px solid rgba(201,160,92,.42);
+  border-radius:calc(var(--card-w)*0.0381);
+  box-shadow:0 16px 34px -16px rgba(63,24,38,.28), inset 0 1px 0 rgba(255,255,255,.9);
+  -webkit-backdrop-filter:blur(9px) saturate(130%);
+  backdrop-filter:blur(9px) saturate(130%);
+}
+.calendar-card::before{
+  content:''; position:absolute; inset:calc(var(--card-w)*0.01429); z-index:0; pointer-events:none;
+  border:1px solid rgba(201,160,92,.28); border-radius:calc(var(--card-w)*0.02619);
+}
+.calendar-ornament{ position:relative; z-index:1; width:calc(var(--card-w)*0.1381); margin:0 auto calc(var(--card-w)*0.01429); --rule-o:.85; opacity:0; transform-origin:center; animation:drawRule .85s var(--ease-soft) .62s both; }
+.calendar-ornament svg{ display:block; width:100%; height:auto; }
+
+.calendar-head{
+  position:relative; z-index:1;
+  display:flex; align-items:center; justify-content:center; gap:calc(var(--card-w)*0.02143);
+  margin:0 0 calc(var(--card-w)*0.02143);
+}
+.calendar-month{
+  font-family:var(--font-elegant); font-style:italic; font-weight:700;
+  font-size:calc(var(--card-w)*0.03571); color:var(--rose-800); letter-spacing:.01em;
+}
+.calendar-head-sep{ width:1px; height:calc(var(--card-w)*0.02857); background:rgba(201,160,92,.55); }
+.calendar-year{
+  font-family:var(--font-body); font-weight:600; font-size:calc(var(--card-w)*0.02429);
+  letter-spacing:.16em; color:var(--gold-700); opacity:.9;
+}
+
+.calendar-weekdays{
+  position:relative; z-index:1;
+  display:grid; grid-template-columns:repeat(7,1fr);
+  padding-bottom:calc(var(--card-w)*0.01429); margin-bottom:calc(var(--card-w)*0.01429);
+  border-bottom:1px solid rgba(201,160,92,.3);
+}
+.calendar-weekdays span{
+  display:block; text-align:center;
+  font-size:calc(var(--card-w)*0.02); font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--gold-700); opacity:.75;
+}
+
+.calendar-grid{
+  position:relative; z-index:1;
+  display:grid; grid-template-columns:repeat(7,1fr); row-gap:calc(var(--card-w)*0.00952);
+}
+.cal-cell{
+  position:relative; aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+  opacity:0; transform:translateY(3px) scale(.92);
+  animation:cellReveal .45s var(--ease-soft) both;
+}
+.cal-cell .cal-num{
+  position:relative; z-index:2;
+  font-family:var(--font-body); font-weight:600; font-size:calc(var(--card-w)*0.02738); color:var(--rose-800); opacity:.78;
+}
+.cal-cell.is-weekend .cal-num{ color:var(--rose-500); }
+.cal-cell.is-marked .cal-num{ color:var(--rose-900); font-weight:700; opacity:1; }
+.cal-cell.is-marked::before{
+  content:''; position:absolute; inset:9%; border-radius:50%; z-index:1;
+  background:var(--blush-100);
+  border:1.3px solid var(--gold-500);
+  box-shadow:0 3px 8px -2px rgba(147,57,90,.28);
+  animation:markBreathe 5s ease-in-out 1s infinite;
+}
+.cal-cell.is-marked::after{
+  content:''; position:absolute; inset:9%; border-radius:50%; z-index:0;
+  border:1px solid var(--gold-500);
+  animation:markHalo 5s ease-out 1.8s infinite;
+}
+.cal-heart{
+  position:absolute; top:calc(var(--card-w)*-0.0119); right:6%; z-index:3;
+  width:calc(var(--card-w)*0.02619); height:calc(var(--card-w)*0.02619);
+  transform-origin:center;
+  filter:drop-shadow(0 1px 2px rgba(63,24,38,.35));
+  animation:heartBeat 4.2s ease-in-out 2.2s infinite;
+}
+
+.panel-divider{ width:calc(var(--card-w)*0.13333); --rule-o:.7; opacity:0; transform-origin:center; animation:drawRule .85s var(--ease-soft) .95s both; }
+.panel-divider svg{ display:block; width:100%; height:auto; }
+
+.start-cta{
+  position:relative; overflow:hidden;
+  border:1px solid rgba(201,160,92,.55); cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center; gap:calc(var(--card-w)*0.02143);
+  padding:calc(var(--card-w)*0.02976) calc(var(--card-w)*0.05714); border-radius:calc(var(--card-w)*0.02381);
+  width:100%; max-width:calc(var(--card-w)*0.52381);
+  background:linear-gradient(135deg,var(--rose-700),var(--rose-600));
+  color:var(--ivory);
+  font-family:var(--font-body); font-weight:700; font-size:calc(var(--card-w)*0.02738); letter-spacing:.16em; text-transform:uppercase;
+  box-shadow:0 12px 24px -12px rgba(122,47,71,.55), inset 0 1px 0 rgba(255,255,255,.14);
+  transition:transform .25s var(--ease-spring), box-shadow .3s ease;
+  animation:fadeUp .75s var(--ease-soft) 1.05s backwards;
+}
+.start-cta > span, .start-cta > svg{ position:relative; z-index:1; }
+.start-cta::before{
+  content:''; position:absolute; top:-50%; bottom:-50%; left:0; width:34%; z-index:0; pointer-events:none;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.32), transparent);
+  transform:translateX(-200%) skewX(-16deg);
+  animation:ctaSheen 7s ease-in-out 2.8s infinite;
+}
+.start-cta svg{ width:calc(var(--card-w)*0.03095); height:calc(var(--card-w)*0.03095); flex:0 0 auto; transition:transform .25s var(--ease-spring); }
+.start-cta:active{ transform:scale(.96); }
+.start-cta.tapped{ pointer-events:none; opacity:.85; }
+@media (hover:hover) and (pointer:fine){
+  .start-cta:hover{ transform:translateY(-2px); box-shadow:0 16px 30px -12px rgba(122,47,71,.62), inset 0 1px 0 rgba(255,255,255,.2); }
+  .start-cta:hover svg{ transform:translateX(3px); }
+}
+
+/* Keyframes — entrance-driven, minimal continuous motion */
+@keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
+@keyframes fadeUp{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:translateY(0); } }
+@keyframes cellReveal{ to{ opacity:1; transform:translateY(0) scale(1); } }
+@keyframes driftGradient{ 0%,100%{ background-position:0% 20%; } 50%{ background-position:100% 80%; } }
+@keyframes garlandBreathe{ 0%,100%{ opacity:.72; } 50%{ opacity:.95; } }
+@keyframes markBreathe{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.035); } }
+
+/* card opening */
+@keyframes cardIn{ from{ opacity:0; transform:translateY(16px) scale(.985); } to{ opacity:1; transform:translateY(0) scale(1); } }
+@keyframes cardOut{ from{ opacity:1; transform:translateY(0) scale(1); } to{ opacity:0; transform:translateY(-10px) scale(1.012); } }
+@keyframes cardShine{ 0%{ transform:translateX(0); opacity:0; } 18%{ opacity:1; } 100%{ transform:translateX(340%); opacity:0; } }
+@keyframes garlandDrop{ from{ opacity:0; transform:translateY(-12px); } to{ opacity:.85; transform:translateY(0); } }
+@keyframes laurelRise{ from{ opacity:0; transform:translateY(12px); } to{ opacity:.75; transform:translateY(0); } }
+@keyframes drawRule{ from{ opacity:0; transform:scaleX(.24); } to{ opacity:var(--rule-o,1); transform:scaleX(1); } }
+
+/* quiet, slow accents */
+@keyframes markTwinkle{ 0%,100%{ opacity:.8; transform:scale(1); } 50%{ opacity:1; transform:scale(1.09); } }
+@keyframes markHalo{ 0%{ transform:scale(1); opacity:.55; } 60%,100%{ transform:scale(1.75); opacity:0; } }
+@keyframes heartBeat{ 0%,100%{ transform:scale(1); } 42%{ transform:scale(1.16); } 58%{ transform:scale(1.02); } }
+@keyframes ctaSheen{ 0%{ transform:translateX(-200%) skewX(-16deg); } 15%,100%{ transform:translateX(520%) skewX(-16deg); } }
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+}
+
+/* ===== floating music toggle ===== */
+.music-toggle{
+  position:fixed; top:16px; right:16px; z-index:60;
+  width:40px; height:40px; border-radius:50%;
+  border:1px solid rgba(201,160,92,.45);
+  background:rgba(255,253,248,.5);
+  -webkit-backdrop-filter:blur(9px) saturate(130%);
+  backdrop-filter:blur(9px) saturate(130%);
+  box-shadow:0 8px 18px -8px rgba(63,24,38,.35), inset 0 1px 0 rgba(255,255,255,.6);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; padding:0; -webkit-appearance:none; appearance:none;
+  transition:transform .22s var(--ease-spring), background .25s ease, box-shadow .25s ease;
+  opacity:0; animation:fadeIn .55s var(--ease-soft) .5s both;
+}
+.music-toggle:active{ transform:scale(.9); }
+.music-toggle svg{ width:17px; height:17px; display:block; overflow:visible; }
+@media (hover:hover) and (pointer:fine){
+  .music-toggle:hover{ background:rgba(255,253,248,.75); }
+}
+.music-toggle.needs-tap{ animation:fadeIn .55s var(--ease-soft) .5s both, musicPulse 2.4s ease-in-out .8s infinite; }
+.music-toggle .eq-bar{ transform-origin:center; animation:eqBounce .95s ease-in-out infinite; }
+.music-toggle .eq-bar:nth-child(1){ animation-delay:0s; }
+.music-toggle .eq-bar:nth-child(2){ animation-delay:.16s; }
+.music-toggle .eq-bar:nth-child(3){ animation-delay:.32s; }
+@keyframes musicPulse{
+  0%,100%{ box-shadow:0 8px 18px -8px rgba(63,24,38,.35), inset 0 1px 0 rgba(255,255,255,.6), 0 0 0 0 rgba(201,160,92,.4); }
+  50%{ box-shadow:0 8px 18px -8px rgba(63,24,38,.35), inset 0 1px 0 rgba(255,255,255,.6), 0 0 0 8px rgba(201,160,92,0); }
+}
+@keyframes eqBounce{ 0%,100%{ transform:scaleY(.45); } 50%{ transform:scaleY(1.15); } }
+</style>
+</head>
+<body>
+<audio id="bgMusic" src="audio/one.mp3" loop preload="auto"></audio>
+<button type="button" id="musicToggle" class="music-toggle" aria-label="Play background music" aria-pressed="false">
+  <svg id="musicIconNote" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M9 18V6.6c0-.5.34-.93.83-1.04l9-2C19.46 3.4 20 3.83 20 4.42V16" stroke="var(--rose-700)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="7" cy="18" r="2.4" fill="var(--rose-700)"/>
+    <circle cx="18" cy="16" r="2.4" fill="var(--rose-700)"/>
+  </svg>
+  <svg id="musicIconEq" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="display:none">
+    <rect class="eq-bar" x="4.5" y="9" width="3.2" height="6" rx="1.6" fill="var(--rose-700)"/>
+    <rect class="eq-bar" x="10.4" y="4.5" width="3.2" height="15" rx="1.6" fill="var(--rose-700)"/>
+    <rect class="eq-bar" x="16.3" y="7.5" width="3.2" height="9" rx="1.6" fill="var(--rose-700)"/>
+  </svg>
+</button>
+<div class="start-overlay" id="startOverlay">
+  <canvas class="start-canvas" id="startCanvas"></canvas>
+  <div class="start-frame" aria-hidden="true"></div>
+
+  <!-- fine gold garland -->
+  <div class="start-garland" aria-hidden="true">
+    <svg viewBox="0 0 400 34" preserveAspectRatio="xMidYMin meet">
+      <path d="M0 4 Q100 24 200 12 T400 4" fill="none" stroke="rgba(179,137,74,.4)" stroke-width="1.1"/>
+      <circle cx="60" cy="15" r="2.4" fill="var(--gold-500)"/>
+      <circle cx="140" cy="20" r="2.4" fill="var(--gold-500)"/>
+      <circle cx="200" cy="14" r="2.4" fill="var(--gold-500)"/>
+      <circle cx="260" cy="19" r="2.4" fill="var(--gold-500)"/>
+      <circle cx="340" cy="14" r="2.4" fill="var(--gold-500)"/>
+    </svg>
+  </div>
+
+  <!-- gold laurel line-art -->
+  <div class="start-laurel" aria-hidden="true">
+    <svg viewBox="0 0 400 70" preserveAspectRatio="xMidYMax meet" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <g id="laurelHalf" stroke="var(--gold-600)" fill="var(--gold-500)">
+        <path d="M200 66 C176 60 150 52 128 40 C108 30 92 20 80 8" fill="none" stroke-width="1.1" opacity=".55"/>
+        <ellipse cx="190" cy="62" rx="6" ry="2.6" opacity=".45" transform="rotate(-18 190 62)"/>
+        <ellipse cx="170" cy="55" rx="6" ry="2.6" opacity=".45" transform="rotate(-34 170 55)"/>
+        <ellipse cx="149" cy="46" rx="6" ry="2.6" opacity=".45" transform="rotate(-48 149 46)"/>
+        <ellipse cx="128" cy="35" rx="6" ry="2.6" opacity=".45" transform="rotate(-62 128 35)"/>
+        <ellipse cx="104" cy="23" rx="6" ry="2.6" opacity=".45" transform="rotate(-74 104 23)"/>
+        <ellipse cx="84" cy="11" rx="5.5" ry="2.4" opacity=".45" transform="rotate(-84 84 11)"/>
+        <circle cx="80" cy="8" r="2" opacity=".6"/>
+      </g>
+      <use href="#laurelHalf" xlink:href="#laurelHalf" transform="translate(400,0) scale(-1,1)"/>
+      <circle cx="200" cy="66" r="2.4" fill="var(--gold-600)" opacity=".6"/>
+    </svg>
+  </div>
+
+  <div class="start-content">
+    <p class="start-top-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2.5 L13.9 9.1 L20.5 9.9 L15.4 14.3 L17 20.9 L12 17.2 L7 20.9 L8.6 14.3 L3.5 9.9 L10.1 9.1 Z"
+              stroke="var(--gold-500)" stroke-width="1.1" stroke-linejoin="round" fill="none" opacity=".85"/>
+      </svg>
+    </p>
+    <p class="start-title">For You, <span id="nameSlot">Friend</span> 💫</p>
+    <div class="start-divider" aria-hidden="true">
+      <svg viewBox="0 0 112 14" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="startGoldLine" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#c9a05c" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#b3894a" stop-opacity=".8"/>
+            <stop offset="100%" stop-color="#c9a05c" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <line x1="0" y1="7" x2="45" y2="7" stroke="url(#startGoldLine)" stroke-width="1"/>
+        <path d="M56 2.5 L60.5 7 L56 11.5 L51.5 7 Z" fill="#b3894a" opacity=".8"/>
+        <line x1="67" y1="7" x2="112" y2="7" stroke="url(#startGoldLine)" stroke-width="1"/>
+      </svg>
+    </div>
+    <p class="start-date-line" aria-label="19 September">
+      <span class="start-date-day" id="startDateDay">19</span><span class="start-date-sep"></span><span class="start-date-month" id="startDateMonth">September</span>
+    </p>
+
+    <div class="start-panel" id="startPanel">
+      <div class="calendar-card" id="calendarCard" role="img" aria-label="September calendar with the 19th marked">
+        <div class="calendar-ornament" aria-hidden="true">
+          <svg viewBox="0 0 64 10" xmlns="http://www.w3.org/2000/svg">
+            <line x1="0" y1="5" x2="24" y2="5" stroke="rgba(179,137,74,.5)" stroke-width="1"/>
+            <path d="M32 1 L35.5 5 L32 9 L28.5 5 Z" fill="var(--gold-500)" opacity=".85"/>
+            <line x1="40" y1="5" x2="64" y2="5" stroke="rgba(179,137,74,.5)" stroke-width="1"/>
+          </svg>
+        </div>
+        <div class="calendar-head">
+          <span class="calendar-month" id="calMonth">September</span>
+          <span class="calendar-head-sep" aria-hidden="true"></span>
+          <span class="calendar-year" id="calYear">2026</span>
+        </div>
+        <div class="calendar-weekdays" aria-hidden="true">
+          <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+      </div>
+
+      <div class="panel-divider" aria-hidden="true">
+        <svg viewBox="0 0 56 10" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="5" x2="21" y2="5" stroke="rgba(179,137,74,.5)" stroke-width="1"/>
+          <path d="M28 1 L31.5 5 L28 9 L24.5 5 Z" fill="var(--gold-500)" opacity=".85"/>
+          <line x1="35" y1="5" x2="56" y2="5" stroke="rgba(179,137,74,.5)" stroke-width="1"/>
+        </svg>
+      </div>
+
+      <button type="button" id="startCtaBtn" class="start-cta">
+        <span>Open Your Card</span>
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6" stroke="var(--gold-200)" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="start-shine" aria-hidden="true"></div>
+  <div class="start-grain" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg">
+      <filter id="startGrainNoise">
+        <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.5 0"/>
+      </filter>
+      <rect width="100%" height="100%" filter="url(#startGrainNoise)"/>
+    </svg>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.9.9/Tone.js"></script>
+<script>
+(function(){
+  /* ================================================================
+     ✏️  EDIT YOUR CARD HERE
+     ================================================================ */
+  var CONFIG = {
+    name: "Najiba",
+    birthdayDay: 19,
+    calendar: { year: 2026, month: 9, monthName: "September" }, // month is 1-indexed
+    nextPage: "1.html"
+  };
+
+  /* ---- utils ---- */
+  var REDUCED_MOTION = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  /* muted rose / champagne-gold / ivory only — no candy pastels */
+  var COLORS = ['#c9a05c', '#e6cb8f', '#a9506e', '#cf93a5', '#fffdf8', '#8f6c37'];
+  var HEART_COLORS = ['#cf93a5', '#a9506e', '#efd1d3', '#c9a05c'];
+  function rand(a,b){ return Math.random()*(b-a)+a; }
+  function pick(arr){ return arr[(Math.random()*arr.length)|0]; }
+
+  /* ---- canvas particle system (subtle ambient sparkle + a single tap burst) ---- */
+  function drawHeartPath(ctx,s){
+    ctx.beginPath();
+    ctx.moveTo(0, s*0.35);
+    ctx.bezierCurveTo(-s*0.1, s*0.05, -s*0.5, s*0.05, -s*0.5, -s*0.25);
+    ctx.bezierCurveTo(-s*0.5, -s*0.55, -s*0.15, -s*0.6, 0, -s*0.3);
+    ctx.bezierCurveTo(s*0.15, -s*0.6, s*0.5, -s*0.55, s*0.5, -s*0.25);
+    ctx.bezierCurveTo(s*0.5, s*0.05, s*0.1, s*0.05, 0, s*0.35);
+    ctx.closePath();
+  }
+  function drawStarPath(ctx,s){
+    var spikes=5, outerR=s/2, innerR=outerR*0.42, rot=-Math.PI/2, step=Math.PI/spikes;
+    ctx.beginPath();
+    ctx.moveTo(0,-outerR);
+    for(var i=0;i<spikes;i++){
+      rot += step; ctx.lineTo(Math.cos(rot)*innerR, Math.sin(rot)*innerR);
+      rot += step; ctx.lineTo(Math.cos(rot)*outerR, Math.sin(rot)*outerR);
+    }
+    ctx.closePath();
+  }
+  function drawParticle(ctx,p){
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, Math.min(1, p.life)) * (p.fade!==undefined ? p.fade : 1);
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot);
+    ctx.fillStyle = p.color;
+    if(p.kind === 'heart'){
+      if(p.twinklePhase !== undefined) ctx.globalAlpha *= 0.66 + 0.34*Math.sin(p.twinklePhase);
+      drawHeartPath(ctx,p.size); ctx.fill();
+    } else if(p.kind === 'star'){
+      var tw = 0.55 + 0.45*Math.sin(p.twinklePhase||0);
+      ctx.globalAlpha *= tw;
+      drawStarPath(ctx,p.size); ctx.fill();
+    } else if(p.kind === 'dot'){
+      ctx.beginPath(); ctx.arc(0,0,p.size/2,0,6.2832); ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function makeField(canvas){
+    var ctx = canvas.getContext('2d');
+    var dpr = Math.max(1, window.devicePixelRatio || 1);
+    var W=0, H=0, particles=[], running=false, rafId=null, lastT=null;
+
+    function resize(){
+      var r = canvas.getBoundingClientRect();
+      W = r.width; H = r.height;
+      canvas.width = Math.max(1, Math.round(W*dpr));
+      canvas.height = Math.max(1, Math.round(H*dpr));
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    resize();
+
+    function spawnAmbient(isHeart){
+      /* gentle drifting motes: gold stars, plus a few soft rose hearts */
+      var base = { x:rand(0,W), y:rand(0,H),
+        vx:rand(-3,3), vy:rand(-10,-3.5), gravity:0, drag:0,
+        wobble:rand(5,12), wobbleSpeed:rand(.25,.55), wobblePhase:rand(0,6.28),
+        wrap:true, life:1, decay:0,
+        twinklePhase:rand(0,6.28), twinkleSpeed:rand(.45,.95) };
+      if(isHeart){
+        base.kind = 'heart';
+        base.color = pick(HEART_COLORS);
+        base.size = rand(6,9.5);
+        base.fade = rand(.3,.5);
+        base.rot = rand(-0.22,0.22);
+        base.rotSpeed = rand(-0.12,0.12);  /* a slow rock, never a spin */
+        base.vy = rand(-8,-3);
+      } else {
+        base.kind = 'star';
+        base.color = pick(COLORS);
+        base.size = rand(3.2,5.6);
+        base.fade = rand(.35,.6);
+        base.rot = 0;
+        base.rotSpeed = 0;
+      }
+      return base;
+    }
+    function seedAmbient(count){
+      particles = [];
+      for(var i=0;i<count;i++) particles.push(spawnAmbient(i % 3 === 1));
+    }
+    function burst(x,y,count){
+      for(var i=0;i<count;i++){
+        var isHeart = i % 4 === 0;
+        var angle = rand(0,6.28), speed = rand(60,190);
+        particles.push({
+          kind: isHeart ? 'heart' : 'dot',
+          color: pick(COLORS), size: isHeart ? rand(9,13) : rand(4,8),
+          x:x, y:y, vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed-60,
+          gravity:160, drag:0.42, rot:rand(0,6.28), rotSpeed:rand(-5,5),
+          wobble:0, wobbleSpeed:0, wobblePhase:0, life:1, decay:rand(0.55,0.85), fade:1
+        });
+      }
+    }
+    function ringBurst(x,y,count){
+      var speed = rand(120,160);
+      for(var i=0;i<count;i++){
+        var angle = (i/count) * 6.2832 + rand(-0.05,0.05);
+        var isHeart = i % 6 === 0;
+        particles.push({
+          kind: isHeart ? 'heart' : (i % 2 ? 'star' : 'dot'),
+          color: pick(COLORS), size: isHeart ? rand(8,12) : rand(5,8),
+          x:x, y:y, vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed,
+          gravity:140, drag:0.4, rot:rand(0,6.28), rotSpeed:rand(-5,5),
+          wobble:0, wobbleSpeed:0, wobblePhase:0, life:1, decay:rand(0.6,0.85), fade:1,
+          twinklePhase:rand(0,6.28), twinkleSpeed:rand(1.5,3)
+        });
+      }
+    }
+
+    function update(p,dt){
+      p.vy += p.gravity*dt;
+      if(p.drag){ p.vx -= p.vx*p.drag*dt; p.vy -= (p.vy*p.drag*0.3)*dt; }
+      p.x += (p.vx||0)*dt;
+      p.y += (p.vy||0)*dt;
+      if(p.wobble){
+        p.wobblePhase += (p.wobbleSpeed||.4)*dt*6.2832;
+        p.x += Math.sin(p.wobblePhase)*p.wobble*dt;
+      }
+      if(p.wrap){
+        var m = 14;
+        if(p.x < -m) p.x = W + m; else if(p.x > W + m) p.x = -m;
+        if(p.y < -m) p.y = H + m; else if(p.y > H + m) p.y = -m;
+      }
+      p.rot += (p.rotSpeed||0)*dt;
+      if(p.kind==='star' || p.kind==='heart') p.twinklePhase = (p.twinklePhase||0) + (p.twinkleSpeed||1.5)*dt;
+      if(p.wrap && p.kind==='heart') p.rot = Math.sin(p.twinklePhase*0.6)*0.22;
+      if(p.decay) p.life -= p.decay*dt;
+    }
+    function loop(t){
+      if(!running) return;
+      if(lastT===null) lastT=t;
+      var dt = Math.min(0.05,(t-lastT)/1000);
+      lastT = t;
+      ctx.clearRect(0,0,W,H);
+      for(var i=particles.length-1;i>=0;i--){
+        var p = particles[i];
+        update(p,dt);
+        if(p.decay && p.life<=0){ particles.splice(i,1); continue; }
+        drawParticle(ctx,p);
+      }
+      rafId = requestAnimationFrame(loop);
+    }
+    return {
+      start: function(){ if(running) return; running=true; lastT=null; rafId=requestAnimationFrame(loop); },
+      stop: function(){ running=false; if(rafId) cancelAnimationFrame(rafId); ctx.clearRect(0,0,W,H); },
+      seedAmbient: seedAmbient,
+      burst: burst,
+      ringBurst: ringBurst,
+      resize: resize,
+      getDimensions: function(){ return {W:W, H:H}; }
+    };
+  }
+
+  /* ---- initialise ambient scene ---- */
+  var startCanvas = document.getElementById('startCanvas');
+  var startField = makeField(startCanvas);
+  if(!REDUCED_MOTION){
+    startField.seedAmbient(14);
+    startField.start();
+  }
+
+  /* ---- apply name & date ---- */
+  var name = CONFIG.name || 'Friend';
+  document.getElementById('nameSlot').textContent = name;
+  document.title = 'For You, ' + name + ' 💫';
+
+  var MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var monthName = CONFIG.calendar.monthName || MONTH_NAMES[CONFIG.calendar.month - 1];
+  document.getElementById('startDateDay').textContent = CONFIG.birthdayDay;
+  document.getElementById('startDateMonth').textContent = monthName;
+
+  /* ---- build a proper calendar grid for the given month ---- */
+  function buildCalendar(year, month, markDay){
+    var monthIndex = month - 1;
+    var firstWeekday = new Date(year, monthIndex, 1).getDay(); // 0 = Sunday
+    var daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+
+    document.getElementById('calMonth').textContent = monthName;
+    document.getElementById('calYear').textContent = String(year);
+
+    var grid = document.getElementById('calendarGrid');
+    grid.innerHTML = '';
+
+    var totalCells = Math.ceil((firstWeekday + daysInMonth) / 7) * 7;
+    for(var i = 0; i < totalCells; i++){
+      var dayNum = i - firstWeekday + 1;
+      var col = i % 7;
+      var cell = document.createElement('div');
+      cell.className = 'cal-cell';
+      cell.style.animationDelay = (0.35 + i*0.012) + 's';
+      if(col === 0 || col === 6) cell.classList.add('is-weekend');
+      if(dayNum >= 1 && dayNum <= daysInMonth){
+        var span = document.createElement('span');
+        span.className = 'cal-num';
+        span.textContent = String(dayNum);
+        if(dayNum === markDay){
+          cell.classList.add('is-marked');
+          cell.setAttribute('aria-label', monthName + ' ' + dayNum);
+          var heart = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          heart.setAttribute('viewBox', '0 0 24 24');
+          heart.setAttribute('class', 'cal-heart');
+          heart.setAttribute('aria-hidden', 'true');
+          heart.innerHTML = '<path d="M12 21s-7.5-4.9-10.2-9.4C.2 8.8 1.4 5.4 4.6 4.4c2-.6 4 .1 5.4 1.9 1.4-1.8 3.4-2.5 5.4-1.9 3.2 1 4.4 4.4 2.8 7.2C19.5 16.1 12 21 12 21z" fill="var(--gold-500)"/>';
+          cell.appendChild(heart);
+        }
+        cell.appendChild(span);
+      } else {
+        cell.setAttribute('aria-hidden', 'true');
+      }
+      grid.appendChild(cell);
+    }
+  }
+  buildCalendar(CONFIG.calendar.year, CONFIG.calendar.month, CONFIG.birthdayDay);
+
+  /* ---- audio init for the chime ---- */
+  var chimeSynth = null;
+  function initAudio(){
+    if(!window.Tone) return Promise.resolve();
+    return Tone.start().then(function(){
+      if(Tone.context.state !== 'running') return Tone.context.resume();
+    }).then(function(){
+      try{
+        if(!chimeSynth){
+          chimeSynth = new Tone.Synth({ oscillator:{type:'sine'}, envelope:{attack:0.005,decay:0.25,sustain:0,release:0.25} }).toDestination();
+          chimeSynth.volume.value = -14;
+        }
+      }catch(e){}
+    }).catch(function(){});
+  }
+  function playChime(){
+    if(!chimeSynth) return;
+    try{
+      chimeSynth.triggerAttackRelease('C6','16n');
+      setTimeout(function(){ try{ chimeSynth.triggerAttackRelease('E6','16n'); }catch(e){} }, 100);
+    }catch(e){}
+  }
+
+  /* ---- single soft continue action ---- */
+  var ctaBtn = document.getElementById('startCtaBtn');
+  var navigated = false;
+
+  function handleContinue(e){
+    if(navigated) return;
+    navigated = true;
+    if(e && e.type === 'touchend' && e.cancelable) e.preventDefault();
+    ctaBtn.classList.add('tapped');
+
+    var canvasRect = startCanvas.getBoundingClientRect();
+    var br = ctaBtn.getBoundingClientRect();
+    var cx = br.left + br.width/2 - canvasRect.left;
+    var cy = br.top + br.height/2 - canvasRect.top;
+    startField.ringBurst(cx, cy, 20);
+    setTimeout(function(){ startField.burst(cx, cy, 14); }, 180);
+
+    var overlayEl = document.getElementById('startOverlay');
+    setTimeout(function(){ if(overlayEl) overlayEl.classList.add('is-leaving'); }, 400);
+
+    initAudio().then(function(){
+      playChime();
+      setTimeout(function(){
+        window.location.href = CONFIG.nextPage;
+      }, 950);
+    });
+  }
+
+  ctaBtn.addEventListener('click', handleContinue);
+  ctaBtn.addEventListener('touchend', handleContinue, { passive:false });
+
+  /* resize handler */
+  window.addEventListener('resize', function(){
+    startField.resize();
+  });
+
+})();
+</script>
+
+<script>
+(function(){
+  /* ================================================================
+     🎵 BACKGROUND MUSIC — auto-plays on load; if the browser blocks
+     autoplay (common on mobile), the floating note button pulses so
+     she can tap it, and the very first tap/key anywhere on the page
+     will also quietly start the music.
+     ================================================================ */
+  var bgMusic   = document.getElementById('bgMusic');
+  var toggleBtn = document.getElementById('musicToggle');
+  var iconNote  = document.getElementById('musicIconNote');
+  var iconEq    = document.getElementById('musicIconEq');
+  if(!bgMusic || !toggleBtn) return;
+
+  bgMusic.volume = 0.55;
+
+  function setUI(isPlaying){
+    toggleBtn.classList.toggle('needs-tap', !isPlaying);
+    toggleBtn.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
+    toggleBtn.setAttribute('aria-label', isPlaying ? 'Pause background music' : 'Play background music');
+    if(iconNote) iconNote.style.display = isPlaying ? 'none' : 'block';
+    if(iconEq) iconEq.style.display = isPlaying ? 'block' : 'none';
+  }
+
+  var fallbackBound = false;
+  function armFirstInteractionFallback(){
+    if(fallbackBound) return;
+    fallbackBound = true;
+    function onFirstInteract(){
+      document.removeEventListener('pointerdown', onFirstInteract, true);
+      document.removeEventListener('keydown', onFirstInteract, true);
+      document.removeEventListener('touchstart', onFirstInteract, true);
+      document.removeEventListener('mousedown', onFirstInteract, true);
+      document.removeEventListener('click', onFirstInteract, true);
+      if(bgMusic.paused){
+        bgMusic.play().then(function(){ setUI(true); }).catch(function(){ /* stays paused, button still shows tap state */ });
+      }
+    }
+    /* listen in the CAPTURE phase so we catch the very first gesture
+       anywhere on the page before anything else has a chance to stop
+       it, and cover every gesture type different browsers recognise
+       as "activation" */
+    document.addEventListener('pointerdown', onFirstInteract, { capture:true, passive:true });
+    document.addEventListener('touchstart', onFirstInteract, { capture:true, passive:true });
+    document.addEventListener('mousedown', onFirstInteract, { capture:true, passive:true });
+    document.addEventListener('click', onFirstInteract, { capture:true, passive:true });
+    document.addEventListener('keydown', onFirstInteract, { capture:true });
+  }
+
+  function tryAutoplay(){
+    var playPromise = bgMusic.play();
+    if(playPromise && typeof playPromise.then === 'function'){
+      playPromise.then(function(){
+        setUI(true);
+      }).catch(function(){
+        /* autoplay blocked by the browser — invite a tap, and also
+           silently retry on the very first interaction anywhere */
+        setUI(false);
+        armFirstInteractionFallback();
+      });
+    } else {
+      setUI(true);
+    }
+  }
+
+  toggleBtn.addEventListener('click', function(){
+    if(bgMusic.paused){
+      bgMusic.play().then(function(){ setUI(true); }).catch(function(){ setUI(false); });
+    } else {
+      bgMusic.pause();
+      setUI(false);
+    }
+  });
+
+  bgMusic.addEventListener('playing', function(){ setUI(true); });
+  bgMusic.addEventListener('pause', function(){ setUI(false); });
+
+  /* attempt as early as possible, then again once the page has fully
+     loaded (some browsers evaluate the autoplay policy slightly
+     differently at each point, so trying more than once improves the
+     odds of a silent start) */
+  tryAutoplay();
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){ if(bgMusic.paused) tryAutoplay(); });
+  }
+  window.addEventListener('load', function(){ if(bgMusic.paused) tryAutoplay(); });
+
+  /* iOS/Safari can silently pause media when a page is restored from
+     the back-forward cache (bfcache) — re-attempt whenever the page
+     becomes visible/restored again */
+  window.addEventListener('pageshow', function(){ if(bgMusic.paused) tryAutoplay(); });
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'visible' && bgMusic.paused) tryAutoplay();
+  });
+})();
+</script>
+</body>
+</html>
