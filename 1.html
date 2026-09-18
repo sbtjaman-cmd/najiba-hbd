@@ -140,8 +140,19 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
   font-size:clamp(9px,2.6vw,11px); white-space:normal; line-height:1.25; max-width:100%;
   color:var(--rose-700); letter-spacing:.01em;
 }
+/* a thin gold hairline under each flower name — reads like a botanical specimen label,
+   which suits tags that are literally flower names */
+.photo-mat .frame-tag::after{
+  content:''; display:block; width:20px; height:1px; margin:.4em auto 0;
+  background:linear-gradient(90deg, transparent, var(--gold-500), transparent); opacity:.65;
+}
+/* quiet rule marking the transition from the photo grid to the closing line —
+   a flex-item sibling of the caption, so it needs its own margin rather than
+   relying on margin-collapse (flex items never collapse margins with each other) */
+.caption-divider{ width:36px; height:1px; margin:2.2vw auto 0; background:linear-gradient(90deg, transparent, var(--gold-500), transparent); opacity:0; }
+.page1.active .caption-divider{ animation:popIn .5s cubic-bezier(.34,1.56,.64,1) .68s forwards; }
 .collage-caption{
-  margin-top:calc(3vw - 2px); font-family:var(--font-elegant); font-style:italic; font-weight:500; font-size:clamp(13.5px,3.9vw,16.5px); color:var(--rose-800);
+  margin-top:1.6vw; font-family:var(--font-elegant); font-style:italic; font-weight:500; font-size:clamp(13.5px,3.9vw,16.5px); color:var(--rose-800);
   max-width:88%; text-align:center; line-height:1.35;
   opacity:0;
 }
@@ -193,7 +204,7 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
 .page1.active .fairy-lights-svg{ animation:fairyDropIn .8s cubic-bezier(.34,1.56,.64,1) .05s forwards; }
 @keyframes fairyDropIn{ 0%{ opacity:0; transform:translateY(-9px); } 100%{ opacity:1; transform:translateY(0); } }
 #fairyWire{ opacity:.85; }
-.fairy-bulb{ animation:bulbFlicker 2.6s ease-in-out infinite; animation-delay:var(--fd,0s); transform-origin:center; filter:drop-shadow(0 0 2.4px rgba(242,227,189,.9)); }
+.fairy-bulb{ animation:bulbFlicker 2.6s ease-in-out infinite; animation-delay:var(--fd,0s); transform-origin:center; filter:drop-shadow(0 0 2.4px rgba(242,227,189,.9)) drop-shadow(0 0 5.5px rgba(230,203,143,.5)) drop-shadow(0 0 10px rgba(201,160,92,.24)); }
 @keyframes bulbFlicker{ 0%,100%{ opacity:1; } 42%{ opacity:.72; } 50%{ opacity:1; } 74%{ opacity:.86; } }
 
 /* hand-drawn doodles */
@@ -260,8 +271,14 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
 
 /* vintage photo-corner accents */
 .mat-corner{ position:absolute; width:18px; height:18px; z-index:2; pointer-events:none; }
-.mat-corner.tl{ top:6%; left:6%; background:linear-gradient(135deg, rgba(255,253,248,.98) 0%, rgba(255,253,248,.85) 42%, rgba(201,160,92,.3) 60%, transparent 65%); clip-path:polygon(0 0,100% 0,0 100%); filter:drop-shadow(1px 1px 2px rgba(63,24,38,.26)); }
-.mat-corner.br{ bottom:6%; right:6%; background:linear-gradient(-45deg, rgba(255,253,248,.98) 0%, rgba(255,253,248,.85) 42%, rgba(201,160,92,.3) 60%, transparent 65%); clip-path:polygon(100% 100%,100% 0%,0% 100%); filter:drop-shadow(-1px -1px 2px rgba(63,24,38,.26)); }
+.mat-corner.tl{ top:6%; left:6%; background:
+    linear-gradient(135deg, transparent 53%, rgba(143,108,55,.38) 55%, transparent 58%),
+    linear-gradient(135deg, rgba(255,253,248,.98) 0%, rgba(255,253,248,.85) 42%, rgba(201,160,92,.3) 60%, transparent 65%);
+  clip-path:polygon(0 0,100% 0,0 100%); filter:drop-shadow(1px 1px 2px rgba(63,24,38,.26)); }
+.mat-corner.br{ bottom:6%; right:6%; background:
+    linear-gradient(-45deg, transparent 53%, rgba(143,108,55,.38) 55%, transparent 58%),
+    linear-gradient(-45deg, rgba(255,253,248,.98) 0%, rgba(255,253,248,.85) 42%, rgba(201,160,92,.3) 60%, transparent 65%);
+  clip-path:polygon(100% 100%,100% 0%,0% 100%); filter:drop-shadow(-1px -1px 2px rgba(63,24,38,.26)); }
 
 /* washi tape — torn short edges (clip-path), layered sheen, drop-shadow so it visibly lifts off the mat */
 .tape{ position:absolute; width:46px; height:15px; opacity:.9; z-index:3; pointer-events:none;
@@ -272,8 +289,19 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
 .tape::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(255,255,255,.55), transparent 45%, transparent 60%, rgba(0,0,0,.07)); pointer-events:none; }
 
 /* image slot (new photos live here) */
-.photo-slot{ width:100%; height:100%; aspect-ratio:1/1; border-radius:6px; overflow:hidden; display:block; background:var(--cream-50); box-shadow:inset 0 0 0 1px rgba(63,24,38,.1); }
-.photo-slot img{ width:100%; height:100%; object-fit:cover; display:block; cursor:zoom-in; -webkit-user-drag:none; animation:photoBreathe 7s ease-in-out infinite; animation-delay:var(--bd,0s); transform-origin:center; }
+.photo-slot{ position:relative; width:100%; height:100%; aspect-ratio:1/1; border-radius:6px; overflow:hidden; display:block; background:var(--cream-50); box-shadow:inset 0 0 0 1px rgba(63,24,38,.1); }
+/* subtle vignette so photos of very different lighting/exposure still feel like one album —
+   a pseudo-element (painted after the plain, non-positioned img in stacking order) so it sits
+   on top without needing its own stacking context */
+.photo-slot::after{
+  content:''; position:absolute; inset:0; z-index:1; pointer-events:none; border-radius:inherit;
+  background:radial-gradient(125% 125% at 50% 50%, rgba(63,24,38,0) 62%, rgba(63,24,38,.16) 100%);
+  mix-blend-mode:multiply;
+}
+/* fine cream-then-gold hairline bevel, like a proper mat under glass — set on the img itself
+   (not the wrapping .photo-slot) since a wrapper's inset shadow paints behind a full-bleed
+   child and would never actually be visible */
+.photo-slot img{ width:100%; height:100%; object-fit:cover; display:block; cursor:zoom-in; -webkit-user-drag:none; border-radius:6px; box-shadow:inset 0 0 0 2px rgba(255,253,248,.92), inset 0 0 0 3px rgba(201,160,92,.55); animation:photoBreathe 7s ease-in-out infinite; animation-delay:var(--bd,0s); transform-origin:center; }
 
 /* supporting grid — a plain flex column of [wire, 3-photo-row, wire, 3-photo-row]. Narrowed to
    90%/312px (was 100%/336px) so the outer photo in each row sits clear of the card edge instead
@@ -312,11 +340,32 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
 @keyframes idleFloatB{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(-3px,4px); } }
 
 /* ===== LIGHTBOX ===== */
-.lightbox{ position:absolute; inset:0; z-index:20; background:rgba(45,18,28,.78); display:flex; align-items:center; justify-content:center; padding:9%; opacity:0; pointer-events:none; transition:opacity .25s ease; }
+.lightbox{ position:absolute; inset:0; z-index:20; background:rgba(45,18,28,.78); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3.5%; padding:9%; opacity:0; pointer-events:none; transition:opacity .25s ease; }
 .lightbox::before{ content:''; position:absolute; inset:0; background:radial-gradient(closest-side, rgba(242,227,189,.2), rgba(242,227,189,0) 70%); pointer-events:none; }
 .lightbox.show{ opacity:1; pointer-events:auto; }
-.lightbox img{ max-width:100%; max-height:100%; border-radius:8px; border:7px solid var(--ivory); box-shadow:0 20px 50px rgba(63,24,38,.5), 0 0 0 1px rgba(201,160,92,.45); transform:scale(.92); transition:transform .25s cubic-bezier(.34,1.56,.64,1); display:block; box-sizing:border-box; }
+.lightbox img{ max-width:100%; max-height:82%; border-radius:8px; border:7px solid var(--ivory); box-shadow:0 20px 50px rgba(63,24,38,.5), 0 0 0 1px rgba(201,160,92,.45); transform:scale(.92); transition:transform .25s cubic-bezier(.34,1.56,.64,1); display:block; box-sizing:border-box; }
 .lightbox.show img{ transform:scale(1); }
+.lightbox-caption{
+  margin:0; max-width:82%; text-align:center; font-family:var(--font-elegant); font-style:italic; font-weight:500;
+  font-size:clamp(12px,3.6vw,15px); color:var(--cream-100); letter-spacing:.02em;
+  opacity:0; transform:translateY(4px); transition:opacity .3s ease .1s, transform .3s ease .1s;
+}
+.lightbox-caption:empty{ display:none; }
+.lightbox.show .lightbox-caption{ opacity:.92; transform:translateY(0); }
+.lightbox-close{
+  position:absolute; top:3.5%; right:4%; z-index:2;
+  width:34px; height:34px; border-radius:50%; padding:0;
+  border:1px solid rgba(242,227,189,.4);
+  background:rgba(255,253,248,.14);
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  color:var(--gold-200); cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:background .2s ease, transform .2s cubic-bezier(.3,1.2,.4,1);
+}
+.lightbox-close svg{ width:15px; height:15px; display:block; }
+.lightbox-close:active{ transform:scale(.9); }
+.lightbox-close:focus-visible{ outline-color:var(--gold-200); }
+@media (hover:hover) and (pointer:fine){ .lightbox-close:hover{ background:rgba(255,253,248,.26); } }
 
 /* ===== CONTROLS ===== */
 .controls{ position:absolute; left:0; right:0; bottom:5%; z-index:8; display:flex; flex-direction:column; align-items:center; gap:8px; }
@@ -446,6 +495,7 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
           <path d="M4,7 Q30,1 60,6 Q90,11 116,5" fill="none" stroke="var(--gold-500)" stroke-width="1.1" stroke-linecap="round" opacity=".85"></path>
           <circle cx="4" cy="7" r="1.5" fill="var(--gold-500)" opacity=".85"></circle>
           <circle cx="116" cy="5" r="1.5" fill="var(--gold-500)" opacity=".85"></circle>
+          <path d="M60,2.6 L62.6,6 L60,9.4 L57.4,6 Z" fill="var(--gold-500)" opacity=".9"></path>
         </svg>
 
         <div class="scrap-hero-area" id="scrapHeroArea">
@@ -455,6 +505,7 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
 
         <div class="scrap-support-grid" id="scrapSupportGrid"></div>
 
+        <div class="caption-divider" aria-hidden="true"></div>
         <p class="collage-caption content" id="collageCaption"><span id="nameSlot">Friend</span>, you bloom brighter than every flower 🌸</p>
       </div>
       </div>
@@ -471,7 +522,7 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
 
   <div class="controls">
     <div class="control-buttons">
-      <button type="button" id="muteBtn" aria-label="Mute or unmute music" style="display: none;"></button>
+      <button type="button" id="muteBtn" aria-label="Mute or unmute music" aria-pressed="true">
         <svg id="muteIconOn" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M9 18V6.6c0-.5.34-.93.83-1.04l9-2C19.46 3.4 20 3.83 20 4.42V16" stroke="var(--rose-700)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
           <circle cx="7" cy="18" r="2.4" fill="var(--rose-700)"/>
@@ -488,7 +539,11 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
   </div>
 
   <div class="lightbox" id="lightbox" role="dialog" aria-label="Photo preview, tap to close">
+    <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close preview">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 6 L18 18 M18 6 L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+    </button>
     <img id="lightboxImg" src="" alt="Enlarged memory photo">
+    <p class="lightbox-caption" id="lightboxCaption"></p>
   </div>
 </div>
 
@@ -680,6 +735,7 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
   var collageCaption = document.getElementById('collageCaption');
   var lightbox = document.getElementById('lightbox');
   var lightboxImg = document.getElementById('lightboxImg');
+  var lightboxCaption = document.getElementById('lightboxCaption');
 
   /* ---- ambient field ---- */
   var ambientField = makeField(ambientCanvas, { fade:0.28 });
@@ -762,7 +818,7 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
     }
   }
 
-  function attachScrapLightbox(img){
+  function attachScrapLightbox(img, tagText){
     img.addEventListener('click', function(){
       var cRect = page1Canvas.getBoundingClientRect();
       var iRect = img.getBoundingClientRect();
@@ -770,7 +826,7 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
       var cy = iRect.top + iRect.height/2 - cRect.top;
       page1Field.sparkleBurst(cx, cy, 20, ['heart','star']);
       playChime();
-      setTimeout(function(){ openLightbox(img.src); }, 180);
+      setTimeout(function(){ openLightbox(img.src, tagText); }, 180);
     });
   }
 
@@ -799,8 +855,8 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
       heroTag.textContent = tags[0];
       heroMat.appendChild(heroTag);
     }
-    loadPhotoInto(heroSlot, heroSrc, 'Hero photo', function(img){
-      attachScrapLightbox(img);
+    loadPhotoInto(heroSlot, heroSrc, tags[0] || 'A favorite memory', function(img){
+      attachScrapLightbox(img, tags[0] || '');
     });
 
     /* supporting grid — 2 rows of 3, each row hanging from its own wire.
@@ -836,8 +892,8 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
         mat.appendChild(tag);
       }
       currentPhotosRow.appendChild(mat);
-      loadPhotoInto(slot, src, 'Photo ' + (i+2), function(img){
-        attachScrapLightbox(img);
+      loadPhotoInto(slot, src, tags[i+1] || ('Memory ' + (i+2)), function(img){
+        attachScrapLightbox(img, tags[i+1] || '');
       });
     });
   }
@@ -1026,9 +1082,10 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
   }
 
   /* ---- lightbox ---- */
-  function openLightbox(src){
+  function openLightbox(src, caption){
     if(!src) return;
     lightboxImg.src = src;
+    if(lightboxCaption) lightboxCaption.textContent = caption || '';
     lightbox.classList.add('show');
   }
   function closeLightbox(){
@@ -1099,6 +1156,10 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
   document.getElementById('prevBtn').addEventListener('click', function(){ goTo('index.html'); });
   document.getElementById('nextBtn').addEventListener('click', function(){ goTo('2.html'); });
   document.addEventListener('keydown', function(e){
+    if(lightbox.classList.contains('show')){
+      if(e.key === 'Escape') closeLightbox();
+      return;
+    }
     if(e.key === 'ArrowLeft') goTo('index.html');
     if(e.key === 'ArrowRight') goTo('2.html');
   });
