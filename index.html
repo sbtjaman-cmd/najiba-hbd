@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>For You 💫</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23c9a05c%22%20d%3D%22M12%2021s-7.5-4.9-10.2-9.4C.2%208.8%201.4%205.4%204.6%204.4c2-.6%204%20.1%205.4%201.9%201.4-1.8%203.4-2.5%205.4-1.9%203.2%201%204.4%204.4%202.8%207.2C19.5%2016.1%2012%2021%2012%2021z%22%2F%3E%3C%2Fsvg%3E">
+<meta name="theme-color" content="#fbf3e7">
+<meta property="og:type" content="website">
+<meta property="og:title" content="For You 💫">
+<meta property="og:description" content="Open when you're ready.">
+<meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
@@ -45,14 +51,16 @@ body{
   background-size:180% 180%;
   animation:driftGradient 32s ease-in-out infinite;
   font-family:var(--font-body); font-weight:500; color:var(--ink);
-  padding:18px; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  padding:18px; padding:max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
 }
+.bg-canvas{ position:fixed; inset:0; z-index:0; pointer-events:none; }
 button{ font-family:inherit; touch-action:manipulation; }
 button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
 
 /* ===== CARD ===== */
 .start-overlay{
-  position:relative; width:var(--card-w); max-width:100%; aspect-ratio:5/7;
+  position:relative; z-index:1; width:var(--card-w); max-width:100%; aspect-ratio:5/7;
   display:flex; align-items:center; justify-content:center;
   padding:calc(var(--card-w)*.07) calc(var(--card-w)*.075) calc(var(--card-w)*.135);
   text-align:center;
@@ -70,6 +78,14 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
   border:1px solid rgba(201,160,92,.38);
   opacity:0; animation:fadeIn .8s var(--ease-soft) .2s both;
 }
+/* small engraved corner flourishes, echoing the laurel/garland line-art */
+.start-corners{ position:absolute; inset:calc(var(--card-w)*0.02619); z-index:2; pointer-events:none; opacity:0; animation:fadeIn .9s var(--ease-soft) .4s both; }
+.start-corner{ position:absolute; width:calc(var(--card-w)*0.062); height:calc(var(--card-w)*0.062); }
+.start-corner svg{ width:100%; height:100%; display:block; }
+.corner-tl{ top:0; left:0; }
+.corner-tr{ top:0; right:0; transform:scaleX(-1); }
+.corner-bl{ bottom:0; left:0; transform:scaleY(-1); }
+.corner-br{ bottom:0; right:0; transform:scale(-1,-1); }
 .start-canvas{ position:absolute; inset:0; z-index:0; pointer-events:none; }
 .start-overlay::before{
   content:''; position:absolute; z-index:0; pointer-events:none; inset:0; border-radius:inherit;
@@ -90,6 +106,14 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
   animation:cardShine 1.9s var(--ease-soft) .8s both;
 }
 
+/* soft pointer-tracked gleam — desktop only, brightens gently near the cursor */
+.start-gleam{
+  position:absolute; inset:0; z-index:3; pointer-events:none; border-radius:inherit;
+  opacity:0; transition:opacity .5s ease;
+  background:radial-gradient(circle calc(var(--card-w)*0.45) at var(--glow-x,50%) var(--glow-y,25%), rgba(255,253,248,.65), transparent 62%);
+}
+.start-overlay.is-glowing .start-gleam{ opacity:.5; }
+
 /* fine gold garland across the top — static, one soft breathing glow, no per-bulb blinking */
 .start-garland{ position:absolute; top:0; left:0; right:0; height:calc(var(--card-w)*0.08095); z-index:2; pointer-events:none; overflow:visible; opacity:.85; animation:garlandDrop 1s var(--ease-soft) .2s both, garlandBreathe 6s ease-in-out 1.2s infinite; }
 .start-garland svg{ width:100%; height:100%; display:block; overflow:visible; }
@@ -99,15 +123,20 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
 .start-laurel svg{ width:100%; height:100%; display:block; }
 
 .start-content{ position:relative; z-index:1; width:100%; }
+@media (hover:hover) and (pointer:fine){
+  .start-content{ transition:transform .6s var(--ease-spring); transform:perspective(800px) rotateX(var(--tiltX,0deg)) rotateY(var(--tiltY,0deg)); }
+}
 
-.start-top-mark{ margin:0 0 calc(var(--card-w)*0.01667); opacity:0; animation:fadeIn .6s var(--ease-soft) .05s both; }
+.start-top-mark{ position:relative; display:inline-block; margin:0 0 calc(var(--card-w)*0.01667); opacity:0; animation:fadeIn .6s var(--ease-soft) .05s both; }
 .start-top-mark svg{ width:calc(var(--card-w)*0.05238); height:calc(var(--card-w)*0.05238); display:inline-block; transform-origin:center; animation:markTwinkle 6s ease-in-out 1.4s infinite; }
+.start-top-mark-spark{ position:absolute; top:-18%; left:62%; width:38%; height:38%; opacity:0; animation:fadeIn .6s var(--ease-soft) .3s both; }
+.start-top-mark-spark svg{ width:100%; height:100%; display:block; transform-origin:center; animation:markTwinkle 5s ease-in-out 2.3s infinite reverse; }
 
 .start-title{
   font-family:var(--font-elegant); font-weight:700; font-style:italic; font-size:calc(var(--card-w)*0.05714);
   color:var(--rose-800);
   letter-spacing:.2px; margin:0 0 calc(var(--card-w)*0.01905); line-height:1.3;
-  text-shadow:0 4px 14px rgba(63,24,38,.1);
+  text-shadow:0 1px 0 rgba(255,253,248,.55), 0 4px 14px rgba(63,24,38,.14);
   opacity:0;
   animation:fadeUp .7s var(--ease-soft) .15s both;
 }
@@ -183,7 +212,15 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
 .cal-cell{
   position:relative; aspect-ratio:1; display:flex; align-items:center; justify-content:center;
   opacity:0; transform:translateY(3px) scale(.92);
-  animation:cellReveal .45s var(--ease-soft) both;
+  animation-name:cellReveal; animation-duration:.45s; animation-timing-function:var(--ease-soft); animation-fill-mode:both;
+  animation-delay:var(--cell-delay,0s);
+}
+.cal-cell.is-marked{
+  animation-name:cellReveal, markPop;
+  animation-duration:.45s, .6s;
+  animation-timing-function:var(--ease-soft), var(--ease-spring);
+  animation-fill-mode:both, both;
+  animation-delay:var(--cell-delay,0s), calc(var(--cell-delay,0s) + .5s);
 }
 .cal-cell .cal-num{
   position:relative; z-index:2;
@@ -234,6 +271,11 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
   transform:translateX(-200%) skewX(-16deg);
   animation:ctaSheen 7s ease-in-out 2.8s infinite;
 }
+.start-cta::after{
+  content:''; position:absolute; inset:0; z-index:0; pointer-events:none; border-radius:inherit;
+  background:radial-gradient(120% 140% at 50% 0%, rgba(255,253,248,.3), transparent 70%);
+  opacity:0; animation:ctaGlow 4.6s ease-in-out 2.6s infinite;
+}
 .start-cta svg{ width:calc(var(--card-w)*0.03095); height:calc(var(--card-w)*0.03095); flex:0 0 auto; transition:transform .25s var(--ease-spring); }
 .start-cta:active{ transform:scale(.96); }
 .start-cta.tapped{ pointer-events:none; opacity:.85; }
@@ -246,6 +288,7 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
 @keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
 @keyframes fadeUp{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:translateY(0); } }
 @keyframes cellReveal{ to{ opacity:1; transform:translateY(0) scale(1); } }
+@keyframes markPop{ 0%{ transform:translateY(0) scale(1); } 45%{ transform:translateY(0) scale(1.22); } 100%{ transform:translateY(0) scale(1); } }
 @keyframes driftGradient{ 0%,100%{ background-position:0% 20%; } 50%{ background-position:100% 80%; } }
 @keyframes garlandBreathe{ 0%,100%{ opacity:.72; } 50%{ opacity:.95; } }
 @keyframes markBreathe{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.035); } }
@@ -263,6 +306,7 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
 @keyframes markHalo{ 0%{ transform:scale(1); opacity:.55; } 60%,100%{ transform:scale(1.75); opacity:0; } }
 @keyframes heartBeat{ 0%,100%{ transform:scale(1); } 42%{ transform:scale(1.16); } 58%{ transform:scale(1.02); } }
 @keyframes ctaSheen{ 0%{ transform:translateX(-200%) skewX(-16deg); } 15%,100%{ transform:translateX(520%) skewX(-16deg); } }
+@keyframes ctaGlow{ 0%,100%{ opacity:0; } 50%{ opacity:1; } }
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
@@ -270,7 +314,7 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
 
 /* ===== floating music toggle ===== */
 .music-toggle{
-  position:fixed; top:16px; right:16px; z-index:60;
+  position:fixed; top:max(16px, env(safe-area-inset-top)); right:max(16px, env(safe-area-inset-right)); z-index:60;
   width:40px; height:40px; border-radius:50%;
   border:1px solid rgba(201,160,92,.45);
   background:rgba(255,253,248,.5);
@@ -283,7 +327,12 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
   opacity:0; animation:fadeIn .55s var(--ease-soft) .5s both;
 }
 .music-toggle:active{ transform:scale(.9); }
-.music-toggle svg{ width:17px; height:17px; display:block; overflow:visible; }
+.music-toggle svg{
+  position:absolute; top:50%; left:50%; width:17px; height:17px; display:block; overflow:visible;
+  opacity:0; transform:translate(-50%,-50%) scale(.7);
+  transition:opacity .35s var(--ease-soft), transform .4s var(--ease-spring);
+}
+.music-toggle svg.is-active{ opacity:1; transform:translate(-50%,-50%) scale(1); }
 @media (hover:hover) and (pointer:fine){
   .music-toggle:hover{ background:rgba(255,253,248,.75); }
 }
@@ -300,14 +349,15 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
 </style>
 </head>
 <body>
+<canvas class="bg-canvas" id="bgCanvas" aria-hidden="true"></canvas>
 <audio id="bgMusic" src="audio/one.mp3" loop preload="auto"></audio>
 <button type="button" id="musicToggle" class="music-toggle" aria-label="Play background music" aria-pressed="false">
-  <svg id="musicIconNote" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <svg id="musicIconNote" class="is-active" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <path d="M9 18V6.6c0-.5.34-.93.83-1.04l9-2C19.46 3.4 20 3.83 20 4.42V16" stroke="var(--rose-700)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="7" cy="18" r="2.4" fill="var(--rose-700)"/>
     <circle cx="18" cy="16" r="2.4" fill="var(--rose-700)"/>
   </svg>
-  <svg id="musicIconEq" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="display:none">
+  <svg id="musicIconEq" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <rect class="eq-bar" x="4.5" y="9" width="3.2" height="6" rx="1.6" fill="var(--rose-700)"/>
     <rect class="eq-bar" x="10.4" y="4.5" width="3.2" height="15" rx="1.6" fill="var(--rose-700)"/>
     <rect class="eq-bar" x="16.3" y="7.5" width="3.2" height="9" rx="1.6" fill="var(--rose-700)"/>
@@ -316,6 +366,12 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
 <div class="start-overlay" id="startOverlay">
   <canvas class="start-canvas" id="startCanvas"></canvas>
   <div class="start-frame" aria-hidden="true"></div>
+  <div class="start-corners" aria-hidden="true">
+    <div class="start-corner corner-tl"><svg viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><path d="M2 14 C2 7 7 2 14 2" fill="none" stroke="var(--gold-600)" stroke-width="1.1" stroke-linecap="round" opacity=".55"/><path d="M2 14 C2 10.5 4.5 8 8 8" fill="none" stroke="var(--gold-500)" stroke-width="1" stroke-linecap="round" opacity=".4"/><circle cx="2" cy="14" r="1.6" fill="var(--gold-500)" opacity=".6"/></svg></div>
+    <div class="start-corner corner-tr"><svg viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><path d="M2 14 C2 7 7 2 14 2" fill="none" stroke="var(--gold-600)" stroke-width="1.1" stroke-linecap="round" opacity=".55"/><path d="M2 14 C2 10.5 4.5 8 8 8" fill="none" stroke="var(--gold-500)" stroke-width="1" stroke-linecap="round" opacity=".4"/><circle cx="2" cy="14" r="1.6" fill="var(--gold-500)" opacity=".6"/></svg></div>
+    <div class="start-corner corner-bl"><svg viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><path d="M2 14 C2 7 7 2 14 2" fill="none" stroke="var(--gold-600)" stroke-width="1.1" stroke-linecap="round" opacity=".55"/><path d="M2 14 C2 10.5 4.5 8 8 8" fill="none" stroke="var(--gold-500)" stroke-width="1" stroke-linecap="round" opacity=".4"/><circle cx="2" cy="14" r="1.6" fill="var(--gold-500)" opacity=".6"/></svg></div>
+    <div class="start-corner corner-br"><svg viewBox="0 0 26 26" xmlns="http://www.w3.org/2000/svg"><path d="M2 14 C2 7 7 2 14 2" fill="none" stroke="var(--gold-600)" stroke-width="1.1" stroke-linecap="round" opacity=".55"/><path d="M2 14 C2 10.5 4.5 8 8 8" fill="none" stroke="var(--gold-500)" stroke-width="1" stroke-linecap="round" opacity=".4"/><circle cx="2" cy="14" r="1.6" fill="var(--gold-500)" opacity=".6"/></svg></div>
+  </div>
 
   <!-- fine gold garland -->
   <div class="start-garland" aria-hidden="true">
@@ -353,6 +409,12 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
         <path d="M12 2.5 L13.9 9.1 L20.5 9.9 L15.4 14.3 L17 20.9 L12 17.2 L7 20.9 L8.6 14.3 L3.5 9.9 L10.1 9.1 Z"
               stroke="var(--gold-500)" stroke-width="1.1" stroke-linejoin="round" fill="none" opacity=".85"/>
       </svg>
+      <span class="start-top-mark-spark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2.5 L13.9 9.1 L20.5 9.9 L15.4 14.3 L17 20.9 L12 17.2 L7 20.9 L8.6 14.3 L3.5 9.9 L10.1 9.1 Z"
+                stroke="var(--gold-500)" stroke-width="1.4" stroke-linejoin="round" fill="none" opacity=".8"/>
+        </svg>
+      </span>
     </p>
     <p class="start-title">For You, <span id="nameSlot">Friend</span> 💫</p>
     <div class="start-divider" aria-hidden="true">
@@ -410,6 +472,7 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
     </div>
   </div>
   <div class="start-shine" aria-hidden="true"></div>
+  <div class="start-gleam" aria-hidden="true"></div>
   <div class="start-grain" aria-hidden="true">
     <svg xmlns="http://www.w3.org/2000/svg">
       <filter id="startGrainNoise">
@@ -600,9 +663,12 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
   /* ---- initialise ambient scene ---- */
   var startCanvas = document.getElementById('startCanvas');
   var startField = makeField(startCanvas);
+  var bgCanvas = document.getElementById('bgCanvas');
+  var bgField = bgCanvas ? makeField(bgCanvas) : null;
   if(!REDUCED_MOTION){
     startField.seedAmbient(14);
     startField.start();
+    if(bgField){ bgField.seedAmbient(12); bgField.start(); }
   }
 
   /* ---- apply name & date ---- */
@@ -633,7 +699,7 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
       var col = i % 7;
       var cell = document.createElement('div');
       cell.className = 'cal-cell';
-      cell.style.animationDelay = (0.35 + i*0.012) + 's';
+      cell.style.setProperty('--cell-delay', (0.35 + i*0.012) + 's');
       if(col === 0 || col === 6) cell.classList.add('is-weekend');
       if(dayNum >= 1 && dayNum <= daysInMonth){
         var span = document.createElement('span');
@@ -712,9 +778,36 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
   ctaBtn.addEventListener('click', handleContinue);
   ctaBtn.addEventListener('touchend', handleContinue, { passive:false });
 
+  /* ---- pointer-tilt + gleam: desktop, fine-pointer only, mirrors the reduced-motion gate above ---- */
+  var canHoverTilt = !!(window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches);
+  if(canHoverTilt && !REDUCED_MOTION){
+    var tiltHost = document.getElementById('startOverlay');
+    var tiltRAF = null;
+    tiltHost.addEventListener('pointermove', function(e){
+      var r = tiltHost.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width;
+      var py = (e.clientY - r.top) / r.height;
+      if(tiltRAF) cancelAnimationFrame(tiltRAF);
+      tiltRAF = requestAnimationFrame(function(){
+        tiltHost.style.setProperty('--tiltX', ((0.5 - py) * 5).toFixed(2) + 'deg');
+        tiltHost.style.setProperty('--tiltY', ((px - 0.5) * 6).toFixed(2) + 'deg');
+        tiltHost.style.setProperty('--glow-x', (px * 100).toFixed(1) + '%');
+        tiltHost.style.setProperty('--glow-y', (py * 100).toFixed(1) + '%');
+      });
+      tiltHost.classList.add('is-glowing');
+    });
+    tiltHost.addEventListener('pointerleave', function(){
+      if(tiltRAF) cancelAnimationFrame(tiltRAF);
+      tiltHost.style.setProperty('--tiltX', '0deg');
+      tiltHost.style.setProperty('--tiltY', '0deg');
+      tiltHost.classList.remove('is-glowing');
+    });
+  }
+
   /* resize handler */
   window.addEventListener('resize', function(){
     startField.resize();
+    if(bgField) bgField.resize();
   });
 
 })();
@@ -740,8 +833,8 @@ button:focus-visible{ outline:2px solid var(--rose-600); outline-offset:2px; }
     toggleBtn.classList.toggle('needs-tap', !isPlaying);
     toggleBtn.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
     toggleBtn.setAttribute('aria-label', isPlaying ? 'Pause background music' : 'Play background music');
-    if(iconNote) iconNote.style.display = isPlaying ? 'none' : 'block';
-    if(iconEq) iconEq.style.display = isPlaying ? 'block' : 'none';
+    if(iconNote) iconNote.classList.toggle('is-active', !isPlaying);
+    if(iconEq) iconEq.classList.toggle('is-active', isPlaying);
   }
 
   var fallbackBound = false;
